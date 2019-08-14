@@ -630,9 +630,9 @@ void bcm2835_gpio_set_pud(uint8_t pin, uint8_t pud)
     } else
     {
     bcm2835_gpio_pud(pud);
-    delayMicroseconds(10);
+    bcm2835_delayMicroseconds(10);
     bcm2835_gpio_pudclk(pin, 1);
-    delayMicroseconds(10);
+    bcm2835_delayMicroseconds(10);
     bcm2835_gpio_pud(BCM2835_GPIO_PUD_OFF);
     bcm2835_gpio_pudclk(pin, 0);
 }

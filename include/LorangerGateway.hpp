@@ -1,13 +1,12 @@
 #pragma once
 
-#include "crocore/Application.hpp"
+#include <unordered_set>
 
 #include <bcm2835.h>
-#include <stdio.h>
-#include <signal.h>
-#include <unistd.h>
 #include <RH_RF95.h>
 
+#include "crocore/Application.hpp"
+#include "crocore/networking.hpp"
 
 #define RF_LED_PIN RPI_V2_GPIO_P1_16 // Led on GPIO23 so P1 connector pin #16
 #define RF_CS_PIN  RPI_V2_GPIO_P1_24 // Slave Select on CE0 so P1 connector pin #24
@@ -34,8 +33,18 @@ private:
     void teardown() override;
 
     void poll_events() override; 
+    
+    void add_connection(crocore::ConnectionPtr con);
+    
+    void remove_connection(crocore::ConnectionPtr con);
 
     RH_RF95 m_rf95 = RH_RF95(RF_CS_PIN, RF_IRQ_PIN);
+
+    crocore::net::tcp_server m_tcp_server; 
+
+    std::unordered_set<crocore::ConnectionPtr> m_connections;
+
+    std::mutex m_mutex;
 };
 
 int main(int argc, char *argv[])

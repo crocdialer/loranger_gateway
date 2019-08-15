@@ -1,5 +1,6 @@
 #include "LorangerGateway.hpp"
 
+using namespace crocore;
 
 LorangerGateway::LorangerGateway(int argc, char *argv[]) : crocore::Application(argc, argv)
 {
@@ -8,6 +9,11 @@ LorangerGateway::LorangerGateway(int argc, char *argv[]) : crocore::Application(
 
 void LorangerGateway::setup()
 {
+    crocore::g_logger.set_severity(Severity::DEBUG);
+
+    m_tcp_server = net::tcp_server(background_queue().io_service(), [this](net::tcp_connection_ptr con){ add_connection(con); });  
+    
+    m_tcp_server.start_listen(4444);
 
     if(!bcm2835_init()){ throw std::runtime_error("bcm2835_init() Failed"); }
   
@@ -21,10 +27,7 @@ void LorangerGateway::setup()
     digitalWrite(RF_RST_PIN, HIGH );
     bcm2835_delay(100);
   
-    if (!m_rf95.init()) 
-    {
-        fprintf( stderr, "\nRF95 module init failed, Please verify wiring/module\n" );
-    }
+    if(!m_rf95.init()){ LOG_ERROR << "RF95 module init failed, not good ..."; }
     else 
     {
         // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
@@ -63,8 +66,8 @@ void LorangerGateway::setup()
         // We're ready to listen for incoming message
         m_rf95.setModeRx();
 
-        printf( " OK NodeID=%d @ %3.2fMHz\n", RF_NODE_ID, RF_FREQUENCY );
-        printf( "Listening packet...\n" );
+        LOG_PRINT << format(" OK NodeID=%d @ %3.2fMHz", RF_NODE_ID, RF_FREQUENCY);
+        LOG_PRINT << "listening ...";
     }
 }
 
@@ -101,8 +104,7 @@ void LorangerGateway::update(double time_delta)
 void LorangerGateway::teardown()
 {
     
-    printf( "\nEnding\n");
-    //bcm2835_gpio_clr_ren(RF_IRQ_PIN);
+    LOG_PRINT << "\nciao " << name();
     bcm2835_close();
 }
 
@@ -110,3 +112,24 @@ void LorangerGateway::poll_events()
 {
 
 } 
+
+
+void LorangerGateway::add_connection(crocore::ConnectionPtr con)
+{
+    LOG_DEBUG << "hello " << con->description();  
+    
+    con->set_disconnect_cb([this](crocore::ConnectionPtr c){ remove_connection(c); });
+
+    // mutex
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_connections.insert(con);
+}
+    
+void LorangerGateway::remove_connection(crocore::ConnectionPtr con)
+{
+    LOG_DEBUG << "bye " << con->description();  
+
+    // mutex
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_connections.erase(con);
+}

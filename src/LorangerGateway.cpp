@@ -95,7 +95,7 @@ void LorangerGateway::update(double time_delta)
         printf("\n");
     }
 
-    bcm2835_delay(5);
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 
 void LorangerGateway::teardown()

@@ -2,6 +2,40 @@
 
 using namespace crocore;
 
+
+// Dump a buffer trying to display ASCII or HEX
+// depending on contents
+std::string buffer_to_string(uint8_t buff[], int len)
+{
+    int i;
+    bool ascii = true;
+    char buf[1024];
+    char *buf_ptr = buf;
+
+    // Check for only printable characters
+    for(i = 0; i< len; i++)
+    {
+        if(buff[i]<32 || buff[i]>127)
+        {
+            if (buff[i]!=0 || i!=len-1)
+            {
+                ascii = false; 
+                break;
+            }
+        }
+    }
+
+    // now do real display according to buffer type
+    // note each char one by one because we're not sure 
+    // string will have \0 on the end
+    for(int i = 0; i< len; i++)
+    {
+        if(ascii){ buf_ptr += sprintf(buf_ptr, "%c", buff[i]); } 
+        else{ buf_ptr += sprintf(buf_ptr, " %02X", buff[i]); }
+    }
+    return buf;
+}
+
 LorangerGateway::LorangerGateway(int argc, char *argv[]) : crocore::Application(argc, argv)
 {
 
@@ -87,17 +121,10 @@ void LorangerGateway::update(double time_delta)
         
         if (m_rf95.recv(buf, &len)) 
         {
-            printf("Packet[%02d] #%d => #%d %ddB: ", len, from, to, rssi);
-            printbuffer(buf, len);
+            LOG_DEBUG << format("Packet[%02d] #%d => #%d %ddB: ", len, from, to, rssi) << buffer_to_string(buf, len);
         } 
-        else
-        {
-            //printf("receive failed\n");
-            Serial.print("receive failed");
-        }
-        printf("\n");
+        else{ LOG_WARNING << "receive failed"; }
     }
-
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 

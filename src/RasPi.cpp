@@ -35,8 +35,6 @@ void SPIClass::begin(uint16_t divider, uint8_t bitOrder, uint8_t dataMode)
 
   bcm2835_spi_begin();
 
-  //bcm2835_spi_chipSelect(BCM2835_SPI_CS_NONE); // RH Library code control CS line
-
   //Initialize a timestamp for millis calculation
   gettimeofday(&RHStartTime, NULL);
 }
@@ -137,34 +135,34 @@ long random(long min, long max)
   return ret;
 }
 
-// Dump a buffer trying to display ASCII or HEX
-// depending on contents
-void printbuffer(uint8_t buff[], int len)
-{
-  int i;
-  bool ascii = true;
-  
-  // Check for only printable characters
-  for (i = 0; i< len; i++) {
-    if ( buff[i]<32 || buff[i]>127) {
-      if (buff[i]!=0 || i!=len-1) {
-        ascii = false; 
-        break;
-      }
-    }
-  }
-
-  // now do real display according to buffer type
-  // note each char one by one because we're not sure 
-  // string will have \0 on the end
-  for (int i = 0; i< len; i++) {
-    if (ascii) {
-      printf("%c", buff[i]);
-    } else {
-      printf(" %02X", buff[i]);
-    }
-  }
-}
+//// Dump a buffer trying to display ASCII or HEX
+//// depending on contents
+//void printbuffer(uint8_t buff[], int len)
+//{
+//  int i;
+//  bool ascii = true;
+//  
+//  // Check for only printable characters
+//  for (i = 0; i< len; i++) {
+//    if ( buff[i]<32 || buff[i]>127) {
+//      if (buff[i]!=0 || i!=len-1) {
+//        ascii = false; 
+//        break;
+//      }
+//    }
+//  }
+//
+//  // now do real display according to buffer type
+//  // note each char one by one because we're not sure 
+//  // string will have \0 on the end
+//  for (int i = 0; i< len; i++) {
+//    if (ascii) {
+//      printf("%c", buff[i]);
+//    } else {
+//      printf(" %02X", buff[i]);
+//    }
+//  }
+//}
 
 void SerialSimulator::begin(int baud)
 {
@@ -179,11 +177,13 @@ size_t SerialSimulator::println(const char* s)
 {
   print(s);
   printf("\n");
+  return strlen(s);
 }
 
 size_t SerialSimulator::print(const char* s)
 {
   printf(s);
+  return strlen(s);
 }
 
 size_t SerialSimulator::print(unsigned int n, int base)
@@ -195,16 +195,19 @@ size_t SerialSimulator::print(unsigned int n, int base)
   else if (base == OCT)
     printf("%o", n);
   // TODO: BIN
+  return 1;
 }
 
 size_t SerialSimulator::print(char ch)
 {
   printf("%c", ch);
+  return 1;
 }
 
 size_t SerialSimulator::println(char ch)
 {
   printf("%c\n", ch);
+  return 1;
 }
 
 size_t SerialSimulator::print(unsigned char ch, int base)
@@ -216,6 +219,7 @@ size_t SerialSimulator::println(unsigned char ch, int base)
 {
   print((unsigned int)ch, base);
   printf("\n");
+  return 1;
 }
 
 #endif

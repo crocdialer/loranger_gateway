@@ -3,8 +3,7 @@
 using namespace crocore;
 
 
-// Dump a buffer trying to display ASCII or HEX
-// depending on contents
+// Dump a buffer trying to display ASCII or HEX depending on contents
 std::string buffer_to_string(uint8_t buff[], int len)
 {
     int i;
@@ -51,8 +50,7 @@ void LorangerGateway::setup()
 
     if(!bcm2835_init()){ throw std::runtime_error("bcm2835_init() Failed"); }
   
-    printf( "RF95 CS=GPIO%d", RF_CS_PIN);
-    printf( ", RST=GPIO%d", RF_RST_PIN );
+    LOG_INFO << format("hello loranger_gateway! -- RF95 CS=GPIO%d, RST=GPIO%d", RF_CS_PIN, RF_RST_PIN);
     
     // reset RFM95 module
     pinMode(RF_RST_PIN, OUTPUT);
@@ -64,18 +62,10 @@ void LorangerGateway::setup()
     if(!m_rf95.init()){ LOG_ERROR << "RF95 module init failed, not good ..."; }
     else 
     {
-        // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
-
+        // Defaults after init are 868.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
         // The default transmitter power is 13dBm, using PA_BOOST.
         // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
         // you can set transmitter powers from 5 to 23 dBm:
-        //  driver.setTxPower(23, false);
-        // If you are using Modtronix inAir4 or inAir9,or any other module which uses the
-        // transmitter RFO pins and not the PA_BOOST pins
-        // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true. 
-        // Failure to do that will result in extremely low transmit powers.
-        // rf95.setTxPower(14, true);
-
 
         // RF95 Modules don't have RFO pin connected, so just use PA_BOOST
         // check your country max power useable, in EU it's +14dB
@@ -100,30 +90,22 @@ void LorangerGateway::setup()
         // We're ready to listen for incoming message
         m_rf95.setModeRx();
 
-        LOG_PRINT << format(" OK NodeID=%d @ %3.2fMHz", RF_NODE_ID, RF_FREQUENCY);
-        LOG_PRINT << "listening ...";
+        LOG_INFO << format("init success: NodeID=%d @ %3.2fMHz -- listening ...", RF_NODE_ID, RF_FREQUENCY);
     }
 }
 
 void LorangerGateway::update(double time_delta)
 {
-
-    if (m_rf95.available())
-    { 
-        // Should be a message for us now
-        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-        uint8_t len  = sizeof(buf);
-        uint8_t from = m_rf95.headerFrom();
-        uint8_t to   = m_rf95.headerTo();
-        //uint8_t id   = m_rf95.headerId();
-        //uint8_t flags= m_rf95.headerFlags();
-        int8_t rssi  = m_rf95.lastRssi();
+    {
+        std::unique_lock<std::mutex> lock(m_mutex_queue);
         
-        if (m_rf95.recv(buf, &len)) 
+        while(!m_message_queue.empty())
         {
-            LOG_DEBUG << format("Packet[%02d] #%d => #%d %ddB: ", len, from, to, rssi) << buffer_to_string(buf, len);
-        } 
-        else{ LOG_WARNING << "receive failed"; }
+            message_t msg = std::move(m_message_queue.front());
+            m_message_queue.pop_front();
+            
+            LOG_DEBUG << format("Packet[%02d] #%d => #%d %ddB: ", msg.len, msg.from, msg.to, msg.rssi) << buffer_to_string(msg.buf, msg.len);
+        }
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
@@ -137,9 +119,26 @@ void LorangerGateway::teardown()
 
 void LorangerGateway::poll_events()
 {
+    if(m_rf95.available())
+    {
+        message_t msg = {};
 
+        // construct message object 
+        msg.len = sizeof(msg.buf);
+        msg.from = m_rf95.headerFrom();
+        msg.to = m_rf95.headerTo();
+        msg.id = m_rf95.headerId();
+        msg.flags = m_rf95.headerFlags();
+        msg.rssi = m_rf95.lastRssi();
+        
+        if(m_rf95.recv(msg.buf, &msg.len)) 
+        {
+            std::unique_lock<std::mutex> lock(m_mutex_queue);
+            m_message_queue.push_back(std::move(msg));
+        } 
+        else{ LOG_WARNING << "receive failed"; }
+    }
 } 
-
 
 void LorangerGateway::add_connection(crocore::ConnectionPtr con)
 {
@@ -148,7 +147,7 @@ void LorangerGateway::add_connection(crocore::ConnectionPtr con)
     con->set_disconnect_cb([this](crocore::ConnectionPtr c){ remove_connection(c); });
 
     // mutex
-    std::unique_lock<std::mutex> lock(m_mutex);
+    std::unique_lock<std::mutex> lock(m_mutex_connection);
     m_connections.insert(con);
 }
     
@@ -157,6 +156,6 @@ void LorangerGateway::remove_connection(crocore::ConnectionPtr con)
     LOG_DEBUG << "bye " << con->description();  
 
     // mutex
-    std::unique_lock<std::mutex> lock(m_mutex);
+    std::unique_lock<std::mutex> lock(m_mutex_connection);
     m_connections.erase(con);
 }

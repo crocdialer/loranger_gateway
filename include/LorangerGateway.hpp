@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_set>
+#include <deque>
 
 #include <bcm2835.h>
 #include <RH_RF95.h>
@@ -16,6 +17,17 @@
 // Our RFM95 Configuration 
 #define RF_FREQUENCY  868.00
 #define RF_NODE_ID    1
+
+struct message_t
+{
+    uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+    uint8_t len;
+    uint8_t from;
+    uint8_t to;
+    uint8_t id;
+    uint8_t flags;
+    int8_t rssi;
+};
 
 class LorangerGateway : public crocore::Application
 {
@@ -44,7 +56,9 @@ private:
 
     std::unordered_set<crocore::ConnectionPtr> m_connections;
 
-    std::mutex m_mutex;
+    std::deque<message_t> m_message_queue;
+
+    std::mutex m_mutex_connection, m_mutex_queue;
 };
 
 int main(int argc, char *argv[])

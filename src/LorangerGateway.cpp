@@ -178,10 +178,10 @@ void LorangerGateway::process_message(const message_t &msg)
             {"type", "smart_bulb_3000"},
             {"address", msg.from},
             {"rssi", msg.rssi},
-            {"light_sensor", data.light_sensor},
-            {"acceleration", data.acceleration},
+            {"light_sensor", data.light_sensor / (float) 255},
+            {"acceleration", data.acceleration / (float) 255},
             {"leds_enabled", data.leds_enabled},
-            {"battery", data.battery}
+            {"battery", data.battery / (float) 255}
         };
         std::unique_lock<std::mutex> lock(m_mutex_connection);
         for(auto &con : m_connections){ con->write(j.dump(2) + "\n"); }

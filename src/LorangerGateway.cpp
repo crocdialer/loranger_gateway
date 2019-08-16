@@ -1,10 +1,13 @@
+#include <nlohmann/json.hpp>
+
 #include "LorangerGateway.hpp"
+#include "NodeTypes.h"
 
 using namespace crocore;
 
 
 // Dump a buffer trying to display ASCII or HEX depending on contents
-std::string buffer_to_string(uint8_t buff[], int len)
+std::string buffer_to_string(const uint8_t buff[], int len)
 {
     int i;
     bool ascii = true;
@@ -46,7 +49,7 @@ void LorangerGateway::setup()
 
     m_tcp_server = net::tcp_server(background_queue().io_service(), [this](net::tcp_connection_ptr con){ add_connection(con); });  
     
-    m_tcp_server.start_listen(4444);
+    m_tcp_server.start_listen(TCP_LISTEN_PORT);
 
     if(!bcm2835_init()){ throw std::runtime_error("bcm2835_init() Failed"); }
   
@@ -103,8 +106,7 @@ void LorangerGateway::update(double time_delta)
         {
             message_t msg = std::move(m_message_queue.front());
             m_message_queue.pop_front();
-            
-            LOG_DEBUG << format("Packet[%02d] #%d => #%d %ddB: ", msg.len, msg.from, msg.to, msg.rssi) << buffer_to_string(msg.buf, msg.len);
+            process_message(msg);
         }
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
@@ -158,4 +160,30 @@ void LorangerGateway::remove_connection(crocore::ConnectionPtr con)
     // mutex
     std::unique_lock<std::mutex> lock(m_mutex_connection);
     m_connections.erase(con);
+}
+
+
+void LorangerGateway::process_message(const message_t &msg)
+{
+    auto log_str = format("Packet[%02d] #%d => #%d %ddB: %s", msg.len, msg.from, msg.to, msg.rssi, buffer_to_string(msg.buf, msg.len).c_str());
+    LOG_DEBUG << log_str; 
+    
+    if(msg.buf[0] == STRUCT_TYPE_SMART_BULB && msg.len == sizeof(smart_bulb_t))
+    {
+        smart_bulb_t data = {};
+        memcpy(&data, msg.buf, msg.len);
+        
+        json j =
+        {
+            {"type", "smart_bulb_3000"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"light_sensor", data.light_sensor},
+            {"acceleration", data.acceleration},
+            {"leds_enabled", data.leds_enabled},
+            {"battery", data.battery}
+        };
+        std::unique_lock<std::mutex> lock(m_mutex_connection);
+        for(auto &con : m_connections){ con->write(j.dump(2) + "\n"); }
+    }
 }

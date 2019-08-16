@@ -18,6 +18,8 @@
 #define RF_FREQUENCY  868.00
 #define RF_NODE_ID    1
 
+#define TCP_LISTEN_PORT 4444
+
 struct message_t
 {
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
@@ -49,6 +51,8 @@ private:
     void add_connection(crocore::ConnectionPtr con);
     
     void remove_connection(crocore::ConnectionPtr con);
+
+    void process_message(const message_t &msg);
 
     RH_RF95 m_rf95 = RH_RF95(RF_CS_PIN, RF_IRQ_PIN);
 

@@ -184,6 +184,6 @@ void LorangerGateway::process_message(const message_t &msg)
             {"battery", data.battery / (float) 255}
         };
         std::unique_lock<std::mutex> lock(m_mutex_connection);
-        for(auto &con : m_connections){ con->write(j.dump(2) + "\n"); }
+        for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
     }
 }

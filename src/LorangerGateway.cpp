@@ -86,10 +86,6 @@ void LorangerGateway::setup()
         m_rf95.setThisAddress(RF_NODE_ID);
         m_rf95.setHeaderFrom(RF_NODE_ID);
         
-        // Be sure to grab all node packet 
-        // we're sniffing to display, it's a demo
-        m_rf95.setPromiscuous(true);
-
         // We're ready to listen for incoming message
         m_rf95.setModeRx();
 

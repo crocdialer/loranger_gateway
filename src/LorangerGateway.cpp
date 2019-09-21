@@ -164,22 +164,26 @@ void LorangerGateway::process_message(const message_t &msg)
     auto log_str = format("Packet[%02d] #%d => #%d %ddB: %s", msg.len, msg.from, msg.to, msg.rssi, buffer_to_string(msg.buf, msg.len).c_str());
     LOG_DEBUG << log_str; 
     
-    if(msg.buf[0] == STRUCT_TYPE_SMART_BULB && msg.len == sizeof(smart_bulb_t))
+    if(msg.buf[0] == STRUCT_TYPE_SMART_BULB && (msg.len >= sizeof(smart_bulb_t)))
     {
-        smart_bulb_t data = {};
-        memcpy(&data, msg.buf, msg.len);
-        
-        json j =
+        if(crc8(msg.buf, msg.len - 1) == msg.buf[msg.len - 1])
         {
-            {"type", "smart_bulb_3000"},
-            {"address", msg.from},
-            {"rssi", msg.rssi},
-            {"light_sensor", data.light_sensor / (float) 255},
-            {"acceleration", data.acceleration / (float) 255},
-            {"leds_enabled", data.leds_enabled},
-            {"battery", data.battery / (float) 255}
-        };
-        std::unique_lock<std::mutex> lock(m_mutex_connection);
-        for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
+            smart_bulb_t data = {};
+            memcpy(&data, msg.buf, sizeof(smart_bulb_t));
+            
+            json j =
+            {
+                {"type", "smart_bulb_3000"},
+                {"address", msg.from},
+                {"rssi", msg.rssi},
+                {"light_sensor", data.light_sensor / (float) 255},
+                {"acceleration", data.acceleration / (float) 255},
+                {"leds_enabled", data.leds_enabled},
+                {"battery", data.battery / (float) 255}
+            };
+            std::unique_lock<std::mutex> lock(m_mutex_connection);
+            for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
+        }
+        else{ LOG_DEBUG << "wrong checksum"; }
     }
 }

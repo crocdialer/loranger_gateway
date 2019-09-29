@@ -164,26 +164,46 @@ void LorangerGateway::process_message(const message_t &msg)
     auto log_str = format("Packet[%02d] #%d => #%d %ddB: %s", msg.len, msg.from, msg.to, msg.rssi, buffer_to_string(msg.buf, msg.len).c_str());
     LOG_DEBUG << log_str; 
     
+    if(crc8(msg.buf, msg.len - 1) != msg.buf[msg.len - 1])
+    {
+        LOG_DEBUG << "wrong checksum"; 
+        return;
+    }
+
     if(msg.buf[0] == STRUCT_TYPE_SMART_BULB && (msg.len >= sizeof(smart_bulb_t)))
     {
-        if(crc8(msg.buf, msg.len - 1) == msg.buf[msg.len - 1])
+        smart_bulb_t data = {};
+        memcpy(&data, msg.buf, sizeof(smart_bulb_t));
+       
+        json j =
         {
-            smart_bulb_t data = {};
-            memcpy(&data, msg.buf, sizeof(smart_bulb_t));
-            
-            json j =
-            {
-                {"type", "smart_bulb_3000"},
-                {"address", msg.from},
-                {"rssi", msg.rssi},
-                {"light_sensor", data.light_sensor / (float) 255},
-                {"acceleration", data.acceleration / (float) 255},
-                {"leds_enabled", data.leds_enabled},
-                {"battery", data.battery / (float) 255}
-            };
-            std::unique_lock<std::mutex> lock(m_mutex_connection);
-            for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
-        }
-        else{ LOG_DEBUG << "wrong checksum"; }
+            {"type", "smart_bulb_3000"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"light_sensor", data.light_sensor / 255.f},
+            {"acceleration", data.acceleration / 255.f},
+            {"leds_enabled", data.leds_enabled},
+            {"battery", data.battery / 255.f}
+        };
+        std::unique_lock<std::mutex> lock(m_mutex_connection);
+        for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
+    }
+    else if(msg.buf[0] == STRUCT_TYPE_ELEVATOR_CONTROL && (msg.len >= sizeof(elevator_t)))
+    {
+        elevator_t data = {};
+        memcpy(&data, msg.buf, sizeof(elevator_t));
+        
+        json j =
+        {
+            {"type", "elevator_control"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"battery", data.battery / 255.f},
+            {"touch_status", data.touch_status},
+            {"velocity", data.velocity / 255.f},
+            {"intensity", data.intensity / 255.f}
+        };
+        std::unique_lock<std::mutex> lock(m_mutex_connection);
+        for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
     }
 }

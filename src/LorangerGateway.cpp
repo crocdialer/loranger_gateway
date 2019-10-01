@@ -198,7 +198,7 @@ void LorangerGateway::process_message(const message_t &msg)
             {"type", "elevator_control"},
             {"address", msg.from},
             {"rssi", msg.rssi},
-            {"battery", data.battery / 255.f},
+            {"button", data.button},
             {"touch_status", data.touch_status},
             {"velocity", data.velocity / 255.f},
             {"intensity", data.intensity / 255.f}

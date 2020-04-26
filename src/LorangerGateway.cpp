@@ -206,4 +206,22 @@ void LorangerGateway::process_message(const message_t &msg)
         std::unique_lock<std::mutex> lock(m_mutex_connection);
         for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
     }
+    else if(msg.buf[0] == STRUCT_TYPE_WEATHERMAN && (msg.len >= sizeof(weather_t)))
+    {
+        weather_t data = {};
+        memcpy(&data, msg.buf, sizeof(weather_t));
+        
+        json j =
+        {
+            {"type", "weatherman"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"battery", data.battery / 255.f},
+            {"temperature", crocore::map_value<float>(data.temperature, 0, 65536, -100.f, 100.f)},
+            {"pressure", crocore::map_value<float>(data.pressure, 0, 65536, 0.f, 2000.f)},
+            {"humidity", data.humidity / 255.f}
+        };
+        std::unique_lock<std::mutex> lock(m_mutex_connection);
+        for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
+    }
 }

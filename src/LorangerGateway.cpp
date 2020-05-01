@@ -164,6 +164,9 @@ void LorangerGateway::process_message(const message_t &msg)
     auto log_str = format("Packet[%02d] #%d => #%d %ddB: %s", msg.len, msg.from, msg.to, msg.rssi, buffer_to_string(msg.buf, msg.len).c_str());
     LOG_DEBUG << log_str; 
     
+    // output json
+    json j;
+
     if(crc8(msg.buf, msg.len - 1) != msg.buf[msg.len - 1])
     {
         LOG_DEBUG << "wrong checksum"; 
@@ -175,7 +178,7 @@ void LorangerGateway::process_message(const message_t &msg)
         smart_bulb_t data = {};
         memcpy(&data, msg.buf, sizeof(smart_bulb_t));
        
-        json j =
+        j =
         {
             {"type", "smart_bulb_3000"},
             {"address", msg.from},
@@ -185,15 +188,13 @@ void LorangerGateway::process_message(const message_t &msg)
             {"leds_enabled", data.leds_enabled},
             {"battery", data.battery / 255.f}
         };
-        std::unique_lock<std::mutex> lock(m_mutex_connection);
-        for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
     }
     else if(msg.buf[0] == STRUCT_TYPE_ELEVATOR_CONTROL && (msg.len >= sizeof(elevator_t)))
     {
         elevator_t data = {};
         memcpy(&data, msg.buf, sizeof(elevator_t));
         
-        json j =
+        j =
         {
             {"type", "elevator_control"},
             {"address", msg.from},
@@ -203,24 +204,26 @@ void LorangerGateway::process_message(const message_t &msg)
             {"velocity", data.velocity / 255.f},
             {"intensity", data.intensity / 255.f}
         };
-        std::unique_lock<std::mutex> lock(m_mutex_connection);
-        for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
     }
     else if(msg.buf[0] == STRUCT_TYPE_WEATHERMAN && (msg.len >= sizeof(weather_t)))
     {
         weather_t data = {};
         memcpy(&data, msg.buf, sizeof(weather_t));
         
-        json j =
+        j =
         {
             {"type", "weatherman"},
             {"address", msg.from},
             {"rssi", msg.rssi},
             {"battery", data.battery / 255.f},
-            {"temperature", crocore::map_value<float>(data.temperature, 0, 65536, -100.f, 100.f)},
-            {"pressure", crocore::map_value<float>(data.pressure, 0, 65536, 0.f, 2000.f)},
+            {"temperature", crocore::map_value<float>(data.temperature, 0, 65535, -50.f, 100.f)},
+            {"pressure", crocore::map_value<float>(data.pressure, 0, 65535, 500.f, 1500.f)},
             {"humidity", data.humidity / 255.f}
         };
+    }
+
+    if(!j.empty())
+    {
         std::unique_lock<std::mutex> lock(m_mutex_connection);
         for(auto &con : m_connections){ con->write(j.dump() + "\n"); }
     }

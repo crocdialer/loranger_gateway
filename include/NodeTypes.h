@@ -31,10 +31,10 @@ typedef struct weather_t
 
     uint8_t battery = 0;
 
-    //! temperature in rang [-100C .. 100C]
+    //! temperature in range [-50C .. 100C]
     uint16_t temperature = 0;
 
-    //! pressure in hPa (mbar)
+    //! pressure in range [500hPa .. 1500hPa]
     uint16_t pressure = 0;
 
     // relative humidity in range [0..1]

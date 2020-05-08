@@ -1247,49 +1247,8 @@ these examples and explanations and extend them to suit your needs.
 // Spencer Kondes megaTinyCore:
 #define RH_PLATFORM_ATTINY_MEGA      18
 
-////////////////////////////////////////////////////
-// Select platform automatically, if possible
-#ifndef RH_PLATFORM
- // #if (defined(MPIDE) && MPIDE>=150 && defined(ARDUINO))
- //  // Using ChipKIT Core on Arduino IDE
- //  #define RH_PLATFORM RH_PLATFORM_CHIPKIT_CORE
- // #elif defined(MPIDE)
- //  // Uno32 under old MPIDE, which has been discontinued:
- //  #define RH_PLATFORM RH_PLATFORM_UNO32
- // #elif defined(NRF51) || defined(NRF52)
- //  #define RH_PLATFORM RH_PLATFORM_NRF51
- // #elif defined(NRF52)
- //  #define RH_PLATFORM RH_PLATFORM_NRF52
- // #elif defined(ESP8266)
- //  #define RH_PLATFORM RH_PLATFORM_ESP8266
- // #elif defined(ESP32)
- //  #define RH_PLATFORM RH_PLATFORM_ESP32
- // #elif defined(MGOS)
- //  #define RH_PLATFORM RH_PLATFORM_MONGOOSE_OS
- // #elif defined(ARDUINO_attinyxy2) || defined(ARDUINO_attinyxy4) || defined(ARDUINO_attinyxy6) || defined(ARDUINO_attinyxy7)
- //  #define RH_PLATFORM RH_PLATFORM_ATTINY_MEGA
- // #elif defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtinyX4__) || defined(__AVR_ATtinyX5__) || defined(__AVR_ATtiny2313__) || defined(__AVR_ATtiny4313__) || defined(__AVR_ATtinyX313__) || defined(ARDUINO_attiny)
- //  #define RH_PLATFORM RH_PLATFORM_ATTINY
- // #elif defined(ARDUINO)
- //  #define RH_PLATFORM RH_PLATFORM_ARDUINO
- // #elif defined(__MSP430G2452__) || defined(__MSP430G2553__)
- //  #define RH_PLATFORM RH_PLATFORM_MSP430
- // #elif defined(MCU_STM32F103RE)
- //  #define RH_PLATFORM RH_PLATFORM_STM32
- // #elif defined(STM32F2XX)
- //  #define RH_PLATFORM RH_PLATFORM_STM32F2
- // #elif defined(USE_STDPERIPH_DRIVER)
- //  #define RH_PLATFORM RH_PLATFORM_STM32STD
- // #elif defined(RASPBERRY_PI)
-  #define RH_PLATFORM RH_PLATFORM_RASPI
- // #elif defined(__unix__) // Linux
- //  #define RH_PLATFORM RH_PLATFORM_UNIX
- // #elif defined(__APPLE__) // OSX
- //  #define RH_PLATFORM RH_PLATFORM_UNIX
- // #else
- //  #error Platform not defined!
- // #endif
-#endif
+// hard-wired because this library sucks
+#define RH_PLATFORM RH_PLATFORM_RASPI
 
 ////////////////////////////////////////////////////
 // Platform specific headers:
@@ -1421,11 +1380,11 @@ these examples and explanations and extend them to suit your needs.
  #define RH_HAVE_HARDWARE_SPI
  #define RH_HAVE_SERIAL
  #define PROGMEM
- #if (__has_include (<pigpio.h>))
-  #include <RHutil_pigpio/RasPi.h>
- #else
-  #include <RHutil/RasPi.h>
- #endif
+ // #if (__has_include (<pigpio.h>))
+ //  #include <RHutil_pigpio/RasPi.h>
+ // #else
+#include <RHutil/RasPi.h>
+ // #endif
  #include <string.h>
  //Define SS for CS0 or pin 24
  #define SS 8

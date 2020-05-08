@@ -1910,8 +1910,8 @@ numBytes is the number of bytes of data in str.
 
 The bytes required for each character depend upon data_bits.
 
-For data_bits 1-8 there will be one byte per character. 
-For data_bits 9-16 there will be two bytes per character. 
+For data_bits 1-8 there will be one byte per character.
+For data_bits 9-16 there will be two bytes per character.
 For data_bits 17-32 there will be four bytes per character.
 
 ...
@@ -1973,8 +1973,8 @@ typedef struct
 
 The fields specify
 
-1) the GPIO to be switched on at the start of the pulse. 
-2) the GPIO to be switched off at the start of the pulse. 
+1) the GPIO to be switched on at the start of the pulse.
+2) the GPIO to be switched off at the start of the pulse.
 3) the delay in microseconds before the next pulse.
 
 Any or all the fields can be zero.  It doesn't make any sense to
@@ -2185,7 +2185,7 @@ transmitted.
 
 Returns the waveform id or one of the following special values:
 
-PI_WAVE_NOT_FOUND (9998) - transmitted wave not found. 
+PI_WAVE_NOT_FOUND (9998) - transmitted wave not found.
 PI_NO_TX_WAVE (9999) - no wave being transmitted.
 D*/
 
@@ -2341,8 +2341,8 @@ or PI_NOT_SERIAL_GPIO.
 The bytes returned for each character depend upon the number of
 data bits [*data_bits*] specified in the [*gpioSerialReadOpen*] command.
 
-For [*data_bits*] 1-8 there will be one byte per character. 
-For [*data_bits*] 9-16 there will be two bytes per character. 
+For [*data_bits*] 1-8 there will be one byte per character.
+For [*data_bits*] 9-16 there will be two bytes per character.
 For [*data_bits*] 17-32 there will be four bytes per character.
 D*/
 
@@ -2391,7 +2391,7 @@ of the function description.  The following abbreviations are used.
 S      (1 bit) : Start bit
 P      (1 bit) : Stop bit
 Rd/Wr  (1 bit) : Read/Write bit. Rd equals 1, Wr equals 0.
-A, NA  (1 bit) : Accept and not accept bit. 
+A, NA  (1 bit) : Accept and not accept bit.
 Addr   (7 bits): I2C 7 bit address.
 i2cReg (8 bits): Command byte, a byte which often selects a register.
 Data   (8 bits): A data byte.
@@ -2848,9 +2848,9 @@ specified baud rate.
 Bit banging I2C allows for certain operations which are not possible
 with the standard I2C driver.
 
-o baud rates as low as 50 
-o repeated starts 
-o clock stretching 
+o baud rates as low as 50
+o repeated starts
+o clock stretching
 o I2C on any pair of spare GPIO
 
 . .
@@ -3323,8 +3323,8 @@ The [*spiRead*], [*spiWrite*], and [*spiXfer*] functions
 transfer data packed into 1, 2, or 4 bytes according to
 the word size in bits.
 
-For bits 1-8 there will be one byte per word. 
-For bits 9-16 there will be two bytes per word. 
+For bits 1-8 there will be one byte per word.
+For bits 9-16 there will be two bytes per word.
 For bits 17-32 there will be four bytes per word.
 
 Multi-byte transfers are made in least significant byte first order.
@@ -4291,8 +4291,8 @@ Type 2 boards have hardware revision numbers of 4, 5, 6, and 15.
 
 Type 3 boards have hardware revision numbers of 16 or greater.
 
-for "Revision       : 0002" the function returns 2. 
-for "Revision       : 000f" the function returns 15. 
+for "Revision       : 0002" the function returns 2.
+for "Revision       : 000f" the function returns 15.
 for "Revision       : 000g" the function returns 0.
 D*/
 
@@ -4523,10 +4523,10 @@ applies.  If no entry matches a file then access is denied.
 Suppose /opt/pigpio/access contains the following entries
 
 . .
-/home/* n
-/home/pi/shared/dir_1/* w
-/home/pi/shared/dir_2/* r
-/home/pi/shared/dir_3/* u
+/home/ \* n
+/home/pi/shared/dir_1/\* w
+/home/pi/shared/dir_2/\* r
+/home/pi/shared/dir_3/\* u
 /home/pi/shared/dir_1/file.txt n
 . .
 
@@ -4579,7 +4579,7 @@ int main(int argc, char *argv[])
    if (gpioInitialise() < 0) return 1;
 
    // assumes /opt/pigpio/access contains the following line
-   // /ram/*.c r
+   // /ram/\*.c r
 
    handle = fileOpen("/ram/pigpio.c", PI_FILE_READ);
 
@@ -4735,7 +4735,7 @@ int main(int argc, char *argv[])
    if (gpioInitialise() < 0) return 1;
 
    // assumes /opt/pigpio/access contains the following line
-   // /ram/*.c r
+   // /ram/\*.c r
 
    c = fileList("/ram/p*.c", buf, sizeof(buf));
 
@@ -4895,8 +4895,8 @@ added to the mask.
 
 If the board revision is not recognised then GPIO 2-27 are allowed.
 
-Unknown board @ PI_DEFAULT_UPDATE_MASK_UNKNOWN @ 0x0FFFFFFC 
-Type 1 board  @ PI_DEFAULT_UPDATE_MASK_B1 @ 0x03E6CF93 
+Unknown board @ PI_DEFAULT_UPDATE_MASK_UNKNOWN @ 0x0FFFFFFC
+Type 1 board  @ PI_DEFAULT_UPDATE_MASK_B1 @ 0x03E6CF93
 Type 2 board  @ PI_DEFAULT_UPDATE_MASK_A_B2 @ 0xFBC6CF9C
 Type 3 board  @ PI_DEFAULT_UPDATE_MASK_R3 @ 0x0FFFFFFC
 D*/
@@ -5400,7 +5400,7 @@ cfgWhat::
 
 A number specifying a configuration item.
 
-562484977: print enhanced statistics at termination. 
+562484977: print enhanced statistics at termination.
 984762879: set the initial debug level.
 
 char::
@@ -5540,13 +5540,13 @@ gpioCfg*::
 
 These functions are only effective if called before [*gpioInitialise*].
 
-[*gpioCfgBufferSize*] 
-[*gpioCfgClock*] 
-[*gpioCfgDMAchannel*] 
-[*gpioCfgDMAchannels*] 
-[*gpioCfgPermissions*] 
-[*gpioCfgInterfaces*] 
-[*gpioCfgSocketPort*] 
+[*gpioCfgBufferSize*]
+[*gpioCfgClock*]
+[*gpioCfgDMAchannel*]
+[*gpioCfgDMAchannels*]
+[*gpioCfgPermissions*]
+[*gpioCfgInterfaces*]
+[*gpioCfgSocketPort*]
 [*gpioCfgMemAlloc*]
 
 gpioGetSamplesFunc_t::
@@ -5621,18 +5621,18 @@ gpioWaveAdd*::
 
 One of
 
-[*gpioWaveAddNew*] 
-[*gpioWaveAddGeneric*] 
+[*gpioWaveAddNew*]
+[*gpioWaveAddGeneric*]
 [*gpioWaveAddSerial*]
 
 handle::>=0
 
 A number referencing an object opened by one of
 
-[*fileOpen*] 
-[*gpioNotifyOpen*] 
-[*i2cOpen*] 
-[*serOpen*] 
+[*fileOpen*]
+[*gpioNotifyOpen*]
+[*i2cOpen*]
+[*serOpen*]
 [*spiOpen*]
 
 i2cAddr:: 0-0x7F
@@ -6140,10 +6140,10 @@ following technique.
 In the calling function:
 
 . .
-user_type *userdata; 
+user_type *userdata;
 user_type my_userdata;
 
-userdata = malloc(sizeof(user_type)); 
+userdata = malloc(sizeof(user_type));
 *userdata = my_userdata;
 . .
 
@@ -6578,4 +6578,3 @@ after this command is issued.
 /*DEF_E*/
 
 #endif
-

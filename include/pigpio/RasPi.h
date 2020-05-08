@@ -167,48 +167,48 @@ void attachInterrupt(unsigned char pin, void (*handler)(void), int mode);
 //the library more "original". Another option would be to include bcm2835.h directly,
 //but this method is easier.
 
- typedef enum
- {
-     BCM2835_SPI_BIT_ORDER_LSBFIRST = 0,
-     BCM2835_SPI_BIT_ORDER_MSBFIRST = 1
- }bcm2835SPIBitOrder;
-
- typedef enum
- {
-     BCM2835_SPI_MODE0 = 0,
-     BCM2835_SPI_MODE1 = 1,
-     BCM2835_SPI_MODE2 = 2,
-     BCM2835_SPI_MODE3 = 3
- }bcm2835SPIMode;
-
- typedef enum
- {
-     BCM2835_SPI_CS0 = 0,
-     BCM2835_SPI_CS1 = 1,
-     BCM2835_SPI_CS2 = 2,
-     BCM2835_SPI_CS_NONE = 3
- } bcm2835SPIChipSelect;
-
- typedef enum
- {
-     BCM2835_SPI_CLOCK_DIVIDER_65536 = 0,
-     BCM2835_SPI_CLOCK_DIVIDER_32768 = 32768,
-     BCM2835_SPI_CLOCK_DIVIDER_16384 = 16384,
-     BCM2835_SPI_CLOCK_DIVIDER_8192  = 8192,
-     BCM2835_SPI_CLOCK_DIVIDER_4096  = 4096,
-     BCM2835_SPI_CLOCK_DIVIDER_2048  = 2048,
-     BCM2835_SPI_CLOCK_DIVIDER_1024  = 1024,
-     BCM2835_SPI_CLOCK_DIVIDER_512   = 512,
-     BCM2835_SPI_CLOCK_DIVIDER_256   = 256,
-     BCM2835_SPI_CLOCK_DIVIDER_128   = 128,
-     BCM2835_SPI_CLOCK_DIVIDER_64    = 64,
-     BCM2835_SPI_CLOCK_DIVIDER_32    = 32,
-     BCM2835_SPI_CLOCK_DIVIDER_16    = 16,
-     BCM2835_SPI_CLOCK_DIVIDER_8     = 8,
-     BCM2835_SPI_CLOCK_DIVIDER_4     = 4,
-     BCM2835_SPI_CLOCK_DIVIDER_2     = 2,
-     BCM2835_SPI_CLOCK_DIVIDER_1     = 1
- } bcm2835SPIClockDivider;
+ // typedef enum
+ // {
+ //     BCM2835_SPI_BIT_ORDER_LSBFIRST = 0,
+ //     BCM2835_SPI_BIT_ORDER_MSBFIRST = 1
+ // }bcm2835SPIBitOrder;
+ //
+ // typedef enum
+ // {
+ //     BCM2835_SPI_MODE0 = 0,
+ //     BCM2835_SPI_MODE1 = 1,
+ //     BCM2835_SPI_MODE2 = 2,
+ //     BCM2835_SPI_MODE3 = 3
+ // }bcm2835SPIMode;
+ //
+ // typedef enum
+ // {
+ //     BCM2835_SPI_CS0 = 0,
+ //     BCM2835_SPI_CS1 = 1,
+ //     BCM2835_SPI_CS2 = 2,
+ //     BCM2835_SPI_CS_NONE = 3
+ // } bcm2835SPIChipSelect;
+ //
+ // typedef enum
+ // {
+ //     BCM2835_SPI_CLOCK_DIVIDER_65536 = 0,
+ //     BCM2835_SPI_CLOCK_DIVIDER_32768 = 32768,
+ //     BCM2835_SPI_CLOCK_DIVIDER_16384 = 16384,
+ //     BCM2835_SPI_CLOCK_DIVIDER_8192  = 8192,
+ //     BCM2835_SPI_CLOCK_DIVIDER_4096  = 4096,
+ //     BCM2835_SPI_CLOCK_DIVIDER_2048  = 2048,
+ //     BCM2835_SPI_CLOCK_DIVIDER_1024  = 1024,
+ //     BCM2835_SPI_CLOCK_DIVIDER_512   = 512,
+ //     BCM2835_SPI_CLOCK_DIVIDER_256   = 256,
+ //     BCM2835_SPI_CLOCK_DIVIDER_128   = 128,
+ //     BCM2835_SPI_CLOCK_DIVIDER_64    = 64,
+ //     BCM2835_SPI_CLOCK_DIVIDER_32    = 32,
+ //     BCM2835_SPI_CLOCK_DIVIDER_16    = 16,
+ //     BCM2835_SPI_CLOCK_DIVIDER_8     = 8,
+ //     BCM2835_SPI_CLOCK_DIVIDER_4     = 4,
+ //     BCM2835_SPI_CLOCK_DIVIDER_2     = 2,
+ //     BCM2835_SPI_CLOCK_DIVIDER_1     = 1
+ // } bcm2835SPIClockDivider;
 
 
 #endif

@@ -1,7 +1,7 @@
 // RHSPIDriver.h
 // Author: Mike McCauley (mikem@airspayce.com)
 // Copyright (C) 2014 Mike McCauley
-// $Id: RHSPIDriver.h,v 1.10 2015/12/16 04:55:33 mikem Exp $
+// $Id: RHSPIDriver.h,v 1.15 2020/04/09 23:40:34 mikem Exp mikem $
 
 #ifndef RHSPIDriver_h
 #define RHSPIDriver_h
@@ -12,27 +12,11 @@
 // This is the bit in the SPI address that marks it as a write
 #define RH_SPI_WRITE_MASK 0x80
 
-#if (RH_PLATFORM == RH_PLATFORM_RASPI)
-#define RPI_CE0_CE1_FIX { \
-          if (_slaveSelectPin!=7) {   \
-            bcm2835_gpio_fsel(7,BCM2835_GPIO_FSEL_OUTP); \
-            bcm2835_gpio_write(7,HIGH); \
-          }                           \
-          if (_slaveSelectPin!=8) {   \
-            bcm2835_gpio_fsel(8,BCM2835_GPIO_FSEL_OUTP); \
-            bcm2835_gpio_write(8,HIGH); \
-          }                           \
-        }
-#else
-#define RPI_CE0_CE1_FIX {}
-#endif
-
-
 class RHGenericSPI;
 
 /////////////////////////////////////////////////////////////////////
 /// \class RHSPIDriver RHSPIDriver.h <RHSPIDriver.h>
-/// \brief Base class for a RadioHead drivers that use the SPI bus
+/// \brief Base class for RadioHead drivers that use the SPI bus
 /// to communicate with its transport hardware.
 ///
 /// This class can be subclassed by Drivers that require to use the SPI bus.
@@ -59,7 +43,7 @@ public:
     /// during SPI communications with the SPI device that uis iused by this Driver.
     /// \param[in] spi Reference to the SPI interface to use. The default is to use a default built-in Hardware interface.
     RHSPIDriver(uint8_t slaveSelectPin = SS, RHGenericSPI& spi = hardware_spi);
-
+    
     /// Initialise the Driver transport hardware and software.
     /// Make sure the Driver is properly configured before calling init().
     /// \return true if initialisation succeeded.
@@ -99,8 +83,14 @@ public:
     /// \param[in] slaveSelectPin The pin to use
     void setSlaveSelectPin(uint8_t slaveSelectPin);
 
-protected:
-    /// Reference to the RHGenericSPI instance to use to transfer data with teh SPI device
+    /// Set the SPI interrupt number
+    /// If SPI transactions can occur within an interrupt, tell the low level SPI
+    /// interface which interrupt is used
+    /// \param[in] interruptNumber the interrupt number
+    void spiUsingInterrupt(uint8_t interruptNumber);
+
+    protected:
+    /// Reference to the RHGenericSPI instance to use to transfer data with the SPI device
     RHGenericSPI&       _spi;
 
     /// The pin number of the Slave Select pin that is used to select the desired device.

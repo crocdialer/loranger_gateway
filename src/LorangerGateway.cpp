@@ -119,18 +119,18 @@ void LorangerGateway::poll_events()
 {
     if(m_rf95.available())
     {
+        // construct message object
         message_t msg = {};
 
-        // construct message object
-        msg.len = sizeof(msg.buf);
-        msg.from = m_rf95.headerFrom();
-        msg.to = m_rf95.headerTo();
-        msg.id = m_rf95.headerId();
-        msg.flags = m_rf95.headerFlags();
-        msg.rssi = m_rf95.lastRssi();
 
         if(m_rf95.recv(msg.buf, &msg.len))
         {
+            msg.from = m_rf95.headerFrom();
+            msg.to = m_rf95.headerTo();
+            msg.id = m_rf95.headerId();
+            msg.flags = m_rf95.headerFlags();
+            msg.rssi = m_rf95.lastRssi();
+
             std::unique_lock<std::mutex> lock(m_mutex_queue);
             m_message_queue.push_back(std::move(msg));
         }

@@ -8,10 +8,9 @@
 
 #include <RadioHead.h>
 
-#if (RH_PLATFORM == RH_PLATFORM_RASPI)
 #include <sys/time.h>
 #include <time.h>
-#include "RasPi.h"
+#include <pigpio/RasPi.h>
 
 //Initialize the values for sanity
 timeval RHStartTime;
@@ -172,5 +171,3 @@ size_t SerialSimulator::println(unsigned char ch, int base)
   print((unsigned int)ch, base);
   printf("\n");
 }
-
-#endif

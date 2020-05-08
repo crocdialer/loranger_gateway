@@ -8,7 +8,13 @@
 #include "crocore/Application.hpp"
 #include "crocore/networking.hpp"
 
-#define RF_LED_PIN RPI_V2_GPIO_P1_16 // Led on GPIO23 so P1 connector pin #16
+typedef enum
+{
+    RPI_GPIO_P1_24 =  8,  /*!< Version 1, Pin P1-24, CE0 when SPI0 in use */
+    RPI_V2_GPIO_P1_22     = 25,  /*!< Version 2, Pin P1-22 */
+    RPI_V2_GPIO_P1_15     = 22  /*!< Version 2, Pin P1-15 */
+} Pins;
+
 #define RF_CS_PIN  RPI_V2_GPIO_P1_24 // Slave Select on CE0 so P1 connector pin #24
 #define RF_IRQ_PIN RPI_V2_GPIO_P1_22 // IRQ on GPIO25 so P1 connector pin #22
 #define RF_RST_PIN RPI_V2_GPIO_P1_15 // IRQ on GPIO22 so P1 connector pin #15

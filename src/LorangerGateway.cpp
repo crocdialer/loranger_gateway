@@ -51,7 +51,8 @@ void LorangerGateway::setup()
 
     m_tcp_server.start_listen(TCP_LISTEN_PORT);
 
-    if(!bcm2835_init()){ throw std::runtime_error("bcm2835_init() Failed"); }
+    if(!bcm2835_init()){ throw std::runtime_error("bcm2835_init() failed ..."); }
+    if(!gpioInitialise()){throw std::runtime_error("gpioInitialise() failed ...");}
 
     LOG_INFO << format("hello loranger_gateway! -- RF95 CS=GPIO%d, RST=GPIO%d", RF_CS_PIN, RF_RST_PIN);
 

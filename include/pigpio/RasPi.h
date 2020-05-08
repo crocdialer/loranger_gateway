@@ -13,7 +13,8 @@
 #ifndef RASPI_h
 #define RASPI_h
 
-#include <pigpio/pigpio.h>
+#include "bcm2835.h"
+#include "pigpio.h"
 
 #include <stdio.h>
 #include <string.h>

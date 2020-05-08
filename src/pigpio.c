@@ -64,7 +64,7 @@ For more information, please refer to <http://unlicense.org/>
 #include <glob.h>
 #include <arpa/inet.h>
 
-#include "pigpio.h"
+#include "pigpio/pigpio.h"
 
 #include "command.h"
 
@@ -6050,7 +6050,7 @@ static void alertEmit(
                      newLevel = reportedLevel;
 
                   report[emit].seqno = seqno;
-                  report[emit].flags = 
+                  report[emit].flags =
                      PI_NTFY_FLAGS_EVENT | PI_NTFY_FLAGS_BIT(b);
                   report[emit].tick  = eTick;
                   report[emit].level = newLevel;
@@ -7378,7 +7378,7 @@ static int initPeripherals(void)
       else
          gpioCfg.DMAprimaryChannel = PI_DEFAULT_DMA_PRIMARY_CHANNEL;
    }
-      
+
    if (gpioCfg.DMAsecondaryChannel == PI_DEFAULT_DMA_NOT_SET)
    {
       if (pi_is_2711)
@@ -7386,7 +7386,7 @@ static int initPeripherals(void)
       else
          gpioCfg.DMAsecondaryChannel = PI_DEFAULT_DMA_SECONDARY_CHANNEL;
    }
-      
+
    dmaIn =  dmaReg + (gpioCfg.DMAprimaryChannel   * 0x40);
    dmaOut = dmaReg + (gpioCfg.DMAsecondaryChannel * 0x40);
 
@@ -7883,7 +7883,7 @@ static void initClock(int mainClock)
    }
 
    clkSrc  = CLK_CTL_SRC_PLLD;
-   clkDivI = clk_plld_freq / (10000000 / micros); /* 10 MHz - 1 MHz */ 
+   clkDivI = clk_plld_freq / (10000000 / micros); /* 10 MHz - 1 MHz */
    clkBits = BITS;        /* 10/BITS MHz - 1/BITS MHz */
    clkDivF = 0;
    clkMash = 0;
@@ -11391,7 +11391,7 @@ int bbSPIXfer(
    wfRx_lock(SCLK);
 
    bbSPIStart(w);
-     
+
    for (pos=0; pos < count; pos++)
    {
       outBuf[pos] = bbSPIXferByte(w, inBuf[pos]);
@@ -14021,7 +14021,7 @@ int gpioCfgInternals(unsigned cfgWhat, unsigned cfgVal)
 
          if ((cfgVal >= DBG_ALWAYS) && (cfgVal <= DBG_MAX_LEVEL))
          {
-            
+
             gpioCfg.dbgLevel = cfgVal;
             gpioCfg.internals = (gpioCfg.internals & (~0xF)) | cfgVal;
 
@@ -14040,4 +14040,3 @@ int gpioCfgInternals(unsigned cfgWhat, unsigned cfgVal)
 /* include any user customisations */
 
 #include "custom.cext"
-

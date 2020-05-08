@@ -66,7 +66,7 @@ For more information, please refer to <http://unlicense.org/>
 
 #include "pigpio/pigpio.h"
 
-#include "command.h"
+#include "pigpio/command.h"
 
 
 /* --------------------------------------------------------------- */

@@ -1,9 +1,9 @@
 // RasPi.h
-//(9/22/2019)   Contributed by Brody M. This file is based off RHutil\RasPi.h
+//(9/22/2019)   Contributed by Brody M. This file is based off RHutil\RasPi.h 
 //              but modified for the pigpio library instead of BCM2835. Original
-//              code maintained where possible. Unused code commented out and
-//              left in place. WiringPinMode enumeration declaration borrowed from
-//              STM32ArduinoCompat\wirish.h. Also some enumeration declarations
+//              code maintained where possible. Unused code commented out and 
+//              left in place. WiringPinMode enumeration declaration borrowed from 
+//              STM32ArduinoCompat\wirish.h. Also some enumeration declarations 
 //              "borrowed" from bcm2835.h to maintain original code and for simplicity.
 
 // Routines for implementing RadioHead on Raspberry Pi
@@ -13,7 +13,7 @@
 #ifndef RASPI_h
 #define RASPI_h
 
-#include <pigpio/pigpio.h>
+#include <pigpio.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -162,52 +162,52 @@ void attachInterrupt(unsigned char pin, void (*handler)(void), int mode);
 
 
 //The following lines are borrowed from bcm2835.h, which is part of the BCM2835 library
-//(https://www.airspayce.com/mikem/bcm2835/). The original RadioHead library expects
-//BCM2835. We could eliminate this by modifying more RadioHead code, but this leaves
+//(https://www.airspayce.com/mikem/bcm2835/). The original RadioHead library expects 
+//BCM2835. We could eliminate this by modifying more RadioHead code, but this leaves 
 //the library more "original". Another option would be to include bcm2835.h directly,
 //but this method is easier.
 
  typedef enum
  {
-     BCM2835_SPI_BIT_ORDER_LSBFIRST = 0,
-     BCM2835_SPI_BIT_ORDER_MSBFIRST = 1
+     BCM2835_SPI_BIT_ORDER_LSBFIRST = 0,  
+     BCM2835_SPI_BIT_ORDER_MSBFIRST = 1   
  }bcm2835SPIBitOrder;
-
+ 
  typedef enum
  {
-     BCM2835_SPI_MODE0 = 0,
-     BCM2835_SPI_MODE1 = 1,
-     BCM2835_SPI_MODE2 = 2,
-     BCM2835_SPI_MODE3 = 3
+     BCM2835_SPI_MODE0 = 0,  
+     BCM2835_SPI_MODE1 = 1,  
+     BCM2835_SPI_MODE2 = 2,  
+     BCM2835_SPI_MODE3 = 3   
  }bcm2835SPIMode;
-
+ 
  typedef enum
  {
-     BCM2835_SPI_CS0 = 0,
-     BCM2835_SPI_CS1 = 1,
-     BCM2835_SPI_CS2 = 2,
-     BCM2835_SPI_CS_NONE = 3
+     BCM2835_SPI_CS0 = 0,     
+     BCM2835_SPI_CS1 = 1,     
+     BCM2835_SPI_CS2 = 2,     
+     BCM2835_SPI_CS_NONE = 3  
  } bcm2835SPIChipSelect;
-
+ 
  typedef enum
  {
-     BCM2835_SPI_CLOCK_DIVIDER_65536 = 0,
-     BCM2835_SPI_CLOCK_DIVIDER_32768 = 32768,
-     BCM2835_SPI_CLOCK_DIVIDER_16384 = 16384,
-     BCM2835_SPI_CLOCK_DIVIDER_8192  = 8192,
-     BCM2835_SPI_CLOCK_DIVIDER_4096  = 4096,
-     BCM2835_SPI_CLOCK_DIVIDER_2048  = 2048,
-     BCM2835_SPI_CLOCK_DIVIDER_1024  = 1024,
-     BCM2835_SPI_CLOCK_DIVIDER_512   = 512,
-     BCM2835_SPI_CLOCK_DIVIDER_256   = 256,
-     BCM2835_SPI_CLOCK_DIVIDER_128   = 128,
-     BCM2835_SPI_CLOCK_DIVIDER_64    = 64,
-     BCM2835_SPI_CLOCK_DIVIDER_32    = 32,
-     BCM2835_SPI_CLOCK_DIVIDER_16    = 16,
-     BCM2835_SPI_CLOCK_DIVIDER_8     = 8,
-     BCM2835_SPI_CLOCK_DIVIDER_4     = 4,
-     BCM2835_SPI_CLOCK_DIVIDER_2     = 2,
-     BCM2835_SPI_CLOCK_DIVIDER_1     = 1
+     BCM2835_SPI_CLOCK_DIVIDER_65536 = 0,       
+     BCM2835_SPI_CLOCK_DIVIDER_32768 = 32768,   
+     BCM2835_SPI_CLOCK_DIVIDER_16384 = 16384,   
+     BCM2835_SPI_CLOCK_DIVIDER_8192  = 8192,    
+     BCM2835_SPI_CLOCK_DIVIDER_4096  = 4096,    
+     BCM2835_SPI_CLOCK_DIVIDER_2048  = 2048,    
+     BCM2835_SPI_CLOCK_DIVIDER_1024  = 1024,    
+     BCM2835_SPI_CLOCK_DIVIDER_512   = 512,     
+     BCM2835_SPI_CLOCK_DIVIDER_256   = 256,     
+     BCM2835_SPI_CLOCK_DIVIDER_128   = 128,     
+     BCM2835_SPI_CLOCK_DIVIDER_64    = 64,      
+     BCM2835_SPI_CLOCK_DIVIDER_32    = 32,      
+     BCM2835_SPI_CLOCK_DIVIDER_16    = 16,      
+     BCM2835_SPI_CLOCK_DIVIDER_8     = 8,       
+     BCM2835_SPI_CLOCK_DIVIDER_4     = 4,       
+     BCM2835_SPI_CLOCK_DIVIDER_2     = 2,       
+     BCM2835_SPI_CLOCK_DIVIDER_1     = 1        
  } bcm2835SPIClockDivider;
 
 

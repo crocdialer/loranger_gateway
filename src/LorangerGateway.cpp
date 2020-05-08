@@ -231,8 +231,8 @@ void LorangerGateway::process_message(const message_t &msg)
             {"address", msg.from},
             {"rssi", msg.rssi},
             {"battery", data.battery / 255.f},
-            {"eco2 (ppm)", crocore::map_value<float>(data.temperature, 0, 65535, 400, 8192)},
-            {"tvoc (pbb)", crocore::map_value<float>(data.pressure, 0, 65535, 0, 1187)}
+            {"eco2 (ppm)", crocore::map_value<float>(data.eco2, 0, 65535, 400, 8192)},
+            {"tvoc (pbb)", crocore::map_value<float>(data.tvoc, 0, 65535, 0, 1187)}
         };
     }
 

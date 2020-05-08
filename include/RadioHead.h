@@ -1381,7 +1381,7 @@ these examples and explanations and extend them to suit your needs.
  #define RH_HAVE_SERIAL
  #define PROGMEM
 
-#include <RHutil_pigpio/RasPi.h>
+#include <pigpio/RasPi.h>
 
  #include <string.h>
  //Define SS for CS0 or pin 24

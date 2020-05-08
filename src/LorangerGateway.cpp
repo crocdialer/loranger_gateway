@@ -121,7 +121,7 @@ void LorangerGateway::poll_events()
     {
         // construct message object
         message_t msg = {};
-
+        msg.len = sizeof(msg.buf);
 
         if(m_rf95.recv(msg.buf, &msg.len))
         {
@@ -130,7 +130,7 @@ void LorangerGateway::poll_events()
             msg.id = m_rf95.headerId();
             msg.flags = m_rf95.headerFlags();
             msg.rssi = m_rf95.lastRssi();
-
+            
             std::unique_lock<std::mutex> lock(m_mutex_queue);
             m_message_queue.push_back(std::move(msg));
         }

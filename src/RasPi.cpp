@@ -1,7 +1,7 @@
 // RasPi.cpp
-//(9/22/2019)   Contributed by Brody M. This file is based off RHutil\RasPi.cpp 
+//(9/22/2019)   Contributed by Brody M. This file is based off RHutil\RasPi.cpp
 //              but modified for the pigpio library instead of BCM2835. Original
-//              code maintained where possible. Unused code commented out and 
+//              code maintained where possible. Unused code commented out and
 //              left in place.
 
 // Routines for implementing RadioHead on Raspberry Pi
@@ -15,7 +15,7 @@
 #if (RH_PLATFORM == RH_PLATFORM_RASPI)
 #include <sys/time.h>
 #include <time.h>
-#include "RasPi.h"
+#include "pigpio/RasPi.h"
 #include <stdio.h>
 
 int spiHandle;
@@ -53,7 +53,7 @@ void SPIClass::begin(uint16_t divider, uint8_t bitOrder, uint8_t dataMode)
   uint32_t spiBaud = convertClockDivider(divider);
   //datamode is 0 to 3 on BCM2835
   uint32_t spiFlags = 0; //Zero is a good default start.
-  //on pigpio, the least sig 2 bits set datamode, which will probably be zero. 
+  //on pigpio, the least sig 2 bits set datamode, which will probably be zero.
   spiFlags = 0x00000000 | (uint32_t) dataMode;
   //According to documentation, bitOrder for SPI MAIN in pigpio is always MSBFIRST. So bitOrder ignored.
   printf("\nSPI Settings:\nBaud rate=%d\nFlags=%d\n\n", spiBaud, spiFlags);

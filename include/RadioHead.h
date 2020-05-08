@@ -1248,177 +1248,176 @@ these examples and explanations and extend them to suit your needs.
 #define RH_PLATFORM_ATTINY_MEGA      18
 
 ////////////////////////////////////////////////////
-// // Select platform automatically, if possible
-// #ifndef RH_PLATFORM
-//  #if (defined(MPIDE) && MPIDE>=150 && defined(ARDUINO))
-//   // Using ChipKIT Core on Arduino IDE
-//   #define RH_PLATFORM RH_PLATFORM_CHIPKIT_CORE
-//  #elif defined(MPIDE)
-//   // Uno32 under old MPIDE, which has been discontinued:
-//   #define RH_PLATFORM RH_PLATFORM_UNO32
-//  #elif defined(NRF51) || defined(NRF52)
-//   #define RH_PLATFORM RH_PLATFORM_NRF51
-//  #elif defined(NRF52)
-//   #define RH_PLATFORM RH_PLATFORM_NRF52
-//  #elif defined(ESP8266)
-//   #define RH_PLATFORM RH_PLATFORM_ESP8266
-//  #elif defined(ESP32)
-//   #define RH_PLATFORM RH_PLATFORM_ESP32
-//  #elif defined(MGOS)
-//   #define RH_PLATFORM RH_PLATFORM_MONGOOSE_OS
-//  #elif defined(ARDUINO_attinyxy2) || defined(ARDUINO_attinyxy4) || defined(ARDUINO_attinyxy6) || defined(ARDUINO_attinyxy7)
-//   #define RH_PLATFORM RH_PLATFORM_ATTINY_MEGA
-//  #elif defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtinyX4__) || defined(__AVR_ATtinyX5__) || defined(__AVR_ATtiny2313__) || defined(__AVR_ATtiny4313__) || defined(__AVR_ATtinyX313__) || defined(ARDUINO_attiny)
-//   #define RH_PLATFORM RH_PLATFORM_ATTINY
-//  #elif defined(ARDUINO)
-//   #define RH_PLATFORM RH_PLATFORM_ARDUINO
-//  #elif defined(__MSP430G2452__) || defined(__MSP430G2553__)
-//   #define RH_PLATFORM RH_PLATFORM_MSP430
-//  #elif defined(MCU_STM32F103RE)
-//   #define RH_PLATFORM RH_PLATFORM_STM32
-//  #elif defined(STM32F2XX)
-//   #define RH_PLATFORM RH_PLATFORM_STM32F2
-//  #elif defined(USE_STDPERIPH_DRIVER)
-//   #define RH_PLATFORM RH_PLATFORM_STM32STD
-//  #elif defined(RASPBERRY_PI)
-//   #define RH_PLATFORM RH_PLATFORM_RASPI
-//  #elif defined(__unix__) // Linux
-//   #define RH_PLATFORM RH_PLATFORM_UNIX
-//  #elif defined(__APPLE__) // OSX
-//   #define RH_PLATFORM RH_PLATFORM_UNIX
-//  #else
-//   #error Platform not defined!
-//  #endif
-// #endif
+// Select platform automatically, if possible
+#ifndef RH_PLATFORM
+ // #if (defined(MPIDE) && MPIDE>=150 && defined(ARDUINO))
+ //  // Using ChipKIT Core on Arduino IDE
+ //  #define RH_PLATFORM RH_PLATFORM_CHIPKIT_CORE
+ // #elif defined(MPIDE)
+ //  // Uno32 under old MPIDE, which has been discontinued:
+ //  #define RH_PLATFORM RH_PLATFORM_UNO32
+ // #elif defined(NRF51) || defined(NRF52)
+ //  #define RH_PLATFORM RH_PLATFORM_NRF51
+ // #elif defined(NRF52)
+ //  #define RH_PLATFORM RH_PLATFORM_NRF52
+ // #elif defined(ESP8266)
+ //  #define RH_PLATFORM RH_PLATFORM_ESP8266
+ // #elif defined(ESP32)
+ //  #define RH_PLATFORM RH_PLATFORM_ESP32
+ // #elif defined(MGOS)
+ //  #define RH_PLATFORM RH_PLATFORM_MONGOOSE_OS
+ // #elif defined(ARDUINO_attinyxy2) || defined(ARDUINO_attinyxy4) || defined(ARDUINO_attinyxy6) || defined(ARDUINO_attinyxy7)
+ //  #define RH_PLATFORM RH_PLATFORM_ATTINY_MEGA
+ // #elif defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtinyX4__) || defined(__AVR_ATtinyX5__) || defined(__AVR_ATtiny2313__) || defined(__AVR_ATtiny4313__) || defined(__AVR_ATtinyX313__) || defined(ARDUINO_attiny)
+ //  #define RH_PLATFORM RH_PLATFORM_ATTINY
+ // #elif defined(ARDUINO)
+ //  #define RH_PLATFORM RH_PLATFORM_ARDUINO
+ // #elif defined(__MSP430G2452__) || defined(__MSP430G2553__)
+ //  #define RH_PLATFORM RH_PLATFORM_MSP430
+ // #elif defined(MCU_STM32F103RE)
+ //  #define RH_PLATFORM RH_PLATFORM_STM32
+ // #elif defined(STM32F2XX)
+ //  #define RH_PLATFORM RH_PLATFORM_STM32F2
+ // #elif defined(USE_STDPERIPH_DRIVER)
+ //  #define RH_PLATFORM RH_PLATFORM_STM32STD
+ // #elif defined(RASPBERRY_PI)
+  #define RH_PLATFORM RH_PLATFORM_RASPI
+ // #elif defined(__unix__) // Linux
+ //  #define RH_PLATFORM RH_PLATFORM_UNIX
+ // #elif defined(__APPLE__) // OSX
+ //  #define RH_PLATFORM RH_PLATFORM_UNIX
+ // #else
+ //  #error Platform not defined!
+ // #endif
+#endif
 
 ////////////////////////////////////////////////////
-// // Platform specific headers:
-// #if (RH_PLATFORM == RH_PLATFORM_ARDUINO)
-//  #if (ARDUINO >= 100)
-//   #include <Arduino.h>
-//  #else
-//   #include <wiring.h>
-//  #endif
-//   #include <SPI.h>
-//   #define RH_HAVE_HARDWARE_SPI
-//   #define RH_HAVE_SERIAL
-//  #if defined(ARDUINO_ARCH_STM32F4)
-//   // output to Serial causes hangs on STM32 F4 Discovery board
-//   // There seems to be no way to output text to the USB connection
-//   #define Serial Serial2
-//  #endif
-// #elif (RH_PLATFORM == RH_PLATFORM_ATTINY)
-//   #warning Arduino TinyCore does not support hardware SPI. Use software SPI instead.
-// #elif (RH_PLATFORM == RH_PLATFORM_ATTINY_MEGA)
-//  #include <SPI.h>
-//   #define RH_HAVE_HARDWARE_SPI
-//   #define RH_HAVE_SERIAL
-// #elif (RH_PLATFORM == RH_PLATFORM_ESP8266) // ESP8266 processor on Arduino IDE
-//  #include <Arduino.h>
-//  #include <SPI.h>
-//  #define RH_HAVE_HARDWARE_SPI
-//  #define RH_HAVE_SERIAL
-//  #define RH_MISSING_SPIUSINGINTERRUPT
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_ESP32)   // ESP32 processor on Arduino IDE
-//  #include <Arduino.h>
-//  #include <SPI.h>
-//  #define RH_HAVE_HARDWARE_SPI
-//  #define RH_HAVE_SERIAL
-//  #define RH_MISSING_SPIUSINGINTERRUPT
-//
-//  #elif (RH_PLATFORM == RH_PLATFORM_MONGOOSE_OS) // Mongoose OS platform
-//   #include <mgos.h>
-//   #include <mgos_adc.h>
-//   #include <mgos_pwm.h>
-//   #include <MGOSCompat/HardwareSerial.h>
-//   #include <MGOSCompat/HardwareSPI.h>
-//   #include <MGOSCompat/MGOS.h>
-//   #include <math.h> // We use the floor() math function.
-//   #define RH_HAVE_HARDWARE_SPI
-//    //If a Radio is connected via a serial port then this defines the serial
-//    //port the radio is connected to.
-//   #if defined(RH_SERIAL_PORT)
-//    #if RH_SERIAL_PORT == 0
-//     #define Serial Serial0
-//    #elif RH_SERIAL_PORT == 1
-//     #define Serial Serial1
-//    #elif RH_SERIAL_PORT == 2
-//     #define Serial Serial2
-//    #endif
-//   #else
-//    #warning "RH_SERIAL_PORT not defined. Therefore serial port 0 selected"
-//    #define Serial Serial0
-//   #endif
-//   #define RH_HAVE_SERIAL
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_MSP430) // LaunchPad specific
-//  #include "legacymsp430.h"
-//  #include "Energia.h"
-//  #include <SPI.h>
-//  #define RH_HAVE_HARDWARE_SPI
-//  #define RH_HAVE_SERIALg
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_UNO32 || RH_PLATFORM == RH_PLATFORM_CHIPKIT_CORE)
-//  #include <WProgram.h>
-//  #include <string.h>
-//  #include <SPI.h>
-//  #define RH_HAVE_HARDWARE_SPI
-//  #define memcpy_P memcpy
-//  #define RH_HAVE_SERIAL
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_STM32) // Maple, Flymaple etc
-//  #include <STM32ArduinoCompat/wirish.h>
-//  #include <stdint.h>
-//  #include <string.h>
-//  #include <STM32ArduinoCompat/HardwareSPI.h>
-//  #define RH_HAVE_HARDWARE_SPI
-//  // Defines which timer to use on Maple
-//  #define MAPLE_TIMER 1
-//  #define PROGMEM
-//  #define memcpy_P memcpy
-//  #define Serial SerialUSB
-//  #define RH_HAVE_SERIAL
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_STM32F2) // Particle Photon with firmware-develop
-//  #include <stm32f2xx.h>
-//  #include <application.h>
-//  #include <math.h> // floor
-//  #define RH_HAVE_SERIAL
-//  #define RH_HAVE_HARDWARE_SPI
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_STM32STD) // STM32 with STM32F4xx_StdPeriph_Driver
-//  #include <stm32f4xx.h>
-//  #include <wirish.h>
-//  #include <stdint.h>
-//  #include <string.h>
-//  #include <math.h>
-//  #include <HardwareSPI.h>
-//  #define RH_HAVE_HARDWARE_SPI
-//  #define Serial SerialUSB
-//  #define RH_HAVE_SERIAL
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_GENERIC_AVR8)
-//  #include <avr/io.h>
-//  #include <avr/interrupt.h>
-//  #include <util/delay.h>
-//  #include <string.h>
-//  #include <stdbool.h>
-//  #define RH_HAVE_HARDWARE_SPI
-//  #include <SPI.h>
-//
-// // For Steve Childress port to ARM M4 w/CMSIS with STM's Hardware Abstraction lib.
-// // See ArduinoWorkarounds.h (not supplied)
-// #elif (RH_PLATFORM == RH_PLATFORM_STM32F4_HAL)
-//  #include <ArduinoWorkarounds.h>
-//  #include <stm32f4xx.h> // Also using ST's CubeMX to generate I/O and CPU setup source code for IAR/EWARM, not GCC ARM.
-//  #include <stdint.h>
-//  #include <string.h>
-//  #include <math.h>
-//  #define RH_HAVE_HARDWARE_SPI // using HAL (Hardware Abstraction Libraries from ST along with CMSIS, not arduino libs or pins concept.
-//
+// Platform specific headers:
+#if (RH_PLATFORM == RH_PLATFORM_ARDUINO)
+ #if (ARDUINO >= 100)
+  #include <Arduino.h>
+ #else
+  #include <wiring.h>
+ #endif
+  #include <SPI.h>
+  #define RH_HAVE_HARDWARE_SPI
+  #define RH_HAVE_SERIAL
+ #if defined(ARDUINO_ARCH_STM32F4)
+  // output to Serial causes hangs on STM32 F4 Discovery board
+  // There seems to be no way to output text to the USB connection
+  #define Serial Serial2
+ #endif
+#elif (RH_PLATFORM == RH_PLATFORM_ATTINY)
+  #warning Arduino TinyCore does not support hardware SPI. Use software SPI instead.
+#elif (RH_PLATFORM == RH_PLATFORM_ATTINY_MEGA)
+ #include <SPI.h>
+  #define RH_HAVE_HARDWARE_SPI
+  #define RH_HAVE_SERIAL
+#elif (RH_PLATFORM == RH_PLATFORM_ESP8266) // ESP8266 processor on Arduino IDE
+ #include <Arduino.h>
+ #include <SPI.h>
+ #define RH_HAVE_HARDWARE_SPI
+ #define RH_HAVE_SERIAL
+ #define RH_MISSING_SPIUSINGINTERRUPT
 
-// #elif (RH_PLATFORM == RH_PLATFORM_RASPI)
+#elif (RH_PLATFORM == RH_PLATFORM_ESP32)   // ESP32 processor on Arduino IDE
+ #include <Arduino.h>
+ #include <SPI.h>
+ #define RH_HAVE_HARDWARE_SPI
+ #define RH_HAVE_SERIAL
+ #define RH_MISSING_SPIUSINGINTERRUPT
+
+ #elif (RH_PLATFORM == RH_PLATFORM_MONGOOSE_OS) // Mongoose OS platform
+  #include <mgos.h>
+  #include <mgos_adc.h>
+  #include <mgos_pwm.h>
+  #include <MGOSCompat/HardwareSerial.h>
+  #include <MGOSCompat/HardwareSPI.h>
+  #include <MGOSCompat/MGOS.h>
+  #include <math.h> // We use the floor() math function.
+  #define RH_HAVE_HARDWARE_SPI
+   //If a Radio is connected via a serial port then this defines the serial
+   //port the radio is connected to.
+  #if defined(RH_SERIAL_PORT)
+   #if RH_SERIAL_PORT == 0
+    #define Serial Serial0
+   #elif RH_SERIAL_PORT == 1
+    #define Serial Serial1
+   #elif RH_SERIAL_PORT == 2
+    #define Serial Serial2
+   #endif
+  #else
+   #warning "RH_SERIAL_PORT not defined. Therefore serial port 0 selected"
+   #define Serial Serial0
+  #endif
+  #define RH_HAVE_SERIAL
+
+#elif (RH_PLATFORM == RH_PLATFORM_MSP430) // LaunchPad specific
+ #include "legacymsp430.h"
+ #include "Energia.h"
+ #include <SPI.h>
+ #define RH_HAVE_HARDWARE_SPI
+ #define RH_HAVE_SERIALg
+
+#elif (RH_PLATFORM == RH_PLATFORM_UNO32 || RH_PLATFORM == RH_PLATFORM_CHIPKIT_CORE)
+ #include <WProgram.h>
+ #include <string.h>
+ #include <SPI.h>
+ #define RH_HAVE_HARDWARE_SPI
+ #define memcpy_P memcpy
+ #define RH_HAVE_SERIAL
+
+#elif (RH_PLATFORM == RH_PLATFORM_STM32) // Maple, Flymaple etc
+ #include <STM32ArduinoCompat/wirish.h>
+ #include <stdint.h>
+ #include <string.h>
+ #include <STM32ArduinoCompat/HardwareSPI.h>
+ #define RH_HAVE_HARDWARE_SPI
+ // Defines which timer to use on Maple
+ #define MAPLE_TIMER 1
+ #define PROGMEM
+ #define memcpy_P memcpy
+ #define Serial SerialUSB
+ #define RH_HAVE_SERIAL
+
+#elif (RH_PLATFORM == RH_PLATFORM_STM32F2) // Particle Photon with firmware-develop
+ #include <stm32f2xx.h>
+ #include <application.h>
+ #include <math.h> // floor
+ #define RH_HAVE_SERIAL
+ #define RH_HAVE_HARDWARE_SPI
+
+#elif (RH_PLATFORM == RH_PLATFORM_STM32STD) // STM32 with STM32F4xx_StdPeriph_Driver
+ #include <stm32f4xx.h>
+ #include <wirish.h>
+ #include <stdint.h>
+ #include <string.h>
+ #include <math.h>
+ #include <HardwareSPI.h>
+ #define RH_HAVE_HARDWARE_SPI
+ #define Serial SerialUSB
+ #define RH_HAVE_SERIAL
+
+#elif (RH_PLATFORM == RH_PLATFORM_GENERIC_AVR8)
+ #include <avr/io.h>
+ #include <avr/interrupt.h>
+ #include <util/delay.h>
+ #include <string.h>
+ #include <stdbool.h>
+ #define RH_HAVE_HARDWARE_SPI
+ #include <SPI.h>
+
+// For Steve Childress port to ARM M4 w/CMSIS with STM's Hardware Abstraction lib.
+// See ArduinoWorkarounds.h (not supplied)
+#elif (RH_PLATFORM == RH_PLATFORM_STM32F4_HAL)
+ #include <ArduinoWorkarounds.h>
+ #include <stm32f4xx.h> // Also using ST's CubeMX to generate I/O and CPU setup source code for IAR/EWARM, not GCC ARM.
+ #include <stdint.h>
+ #include <string.h>
+ #include <math.h>
+ #define RH_HAVE_HARDWARE_SPI // using HAL (Hardware Abstraction Libraries from ST along with CMSIS, not arduino libs or pins concept.
+
+#elif (RH_PLATFORM == RH_PLATFORM_RASPI)
  #define RH_HAVE_HARDWARE_SPI
  #define RH_HAVE_SERIAL
  #define PROGMEM
@@ -1430,28 +1429,28 @@ these examples and explanations and extend them to suit your needs.
  #include <string.h>
  //Define SS for CS0 or pin 24
  #define SS 8
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_NRF51)
-//  #define RH_HAVE_SERIAL
-//  #define PROGMEM
-//   #include <Arduino.h>
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_NRF52)
-//  #include <SPI.h>
-//  #define RH_HAVE_HARDWARE_SPI
-//  #define RH_HAVE_SERIAL
-//  #define PROGMEM
-//   #include <Arduino.h>
-//
-// #elif (RH_PLATFORM == RH_PLATFORM_UNIX)
-//  // Simulate the sketch on Linux and OSX
-//  #include <RHutil/simulator.h>
-//  #define RH_HAVE_SERIAL
-// #include <netinet/in.h> // For htons and friends
-//
-// #else
-//  #error Platform unknown!
-// #endif
+
+#elif (RH_PLATFORM == RH_PLATFORM_NRF51)
+ #define RH_HAVE_SERIAL
+ #define PROGMEM
+  #include <Arduino.h>
+
+#elif (RH_PLATFORM == RH_PLATFORM_NRF52)
+ #include <SPI.h>
+ #define RH_HAVE_HARDWARE_SPI
+ #define RH_HAVE_SERIAL
+ #define PROGMEM
+  #include <Arduino.h>
+
+#elif (RH_PLATFORM == RH_PLATFORM_UNIX)
+ // Simulate the sketch on Linux and OSX
+ #include <RHutil/simulator.h>
+ #define RH_HAVE_SERIAL
+#include <netinet/in.h> // For htons and friends
+
+#else
+ #error Platform unknown!
+#endif
 
 ////////////////////////////////////////////////////
 // This is an attempt to make a portable atomic block

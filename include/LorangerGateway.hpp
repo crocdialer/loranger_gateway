@@ -3,8 +3,6 @@
 #include <unordered_set>
 #include <deque>
 
-// required for RadioHead header
-#define RASPBERRY_PI
 #include <bcm2835.h>
 #include <RH_RF95.h>
 

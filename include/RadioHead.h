@@ -1380,11 +1380,9 @@ these examples and explanations and extend them to suit your needs.
  #define RH_HAVE_HARDWARE_SPI
  #define RH_HAVE_SERIAL
  #define PROGMEM
- // #if (__has_include (<pigpio.h>))
- //  #include <RHutil_pigpio/RasPi.h>
- // #else
-#include <RHutil/RasPi.h>
- // #endif
+
+#include <RHutil_pigpio/RasPi.h>
+
  #include <string.h>
  //Define SS for CS0 or pin 24
  #define SS 8

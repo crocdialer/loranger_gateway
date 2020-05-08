@@ -3,7 +3,6 @@
 // Copyright (C) 2011 Mike McCauley
 // $Id: RH_RF95.cpp,v 1.22 2020/01/05 07:02:23 mikem Exp $
 
-#include <RHutil/RasPi.h>
 #include <RH_RF95.h>
 
 // Interrupt vectors for the 3 Arduino interrupt pins

@@ -33,7 +33,7 @@ typedef struct temperature_t
 
     uint8_t battery = 0;
 
-    //! temperature in range [-100C .. 100C]
+    //! temperature in range [-50C .. 100C]
     uint16_t temperature = 0;
 } temperature_t;
 

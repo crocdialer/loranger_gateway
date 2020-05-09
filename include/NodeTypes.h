@@ -50,10 +50,10 @@ typedef struct gasman_t
     // battery in range [0 .. 1]
     uint8_t battery = 0;
 
-    // eCO2 (equivalent calculated carbon-dioxide) concentration in range [400 .. 8192] parts per million (ppm)
+    // eCO2 (equivalent calculated carbon-dioxide) concentration in parts per million (ppm)
     uint16_t eco2 = 0;
 
-    // TVOC (total volatile organic compound) concentration in range [0 .. 1187] parts per billion (ppb)
+    // TVOC (total volatile organic compound) concentration in parts per billion (ppb)
     uint16_t tvoc = 0;
 
 } gasman_t;

@@ -130,7 +130,7 @@ void LorangerGateway::poll_events()
             msg.id = m_rf95.headerId();
             msg.flags = m_rf95.headerFlags();
             msg.rssi = m_rf95.lastRssi();
-            
+
             std::unique_lock<std::mutex> lock(m_mutex_queue);
             m_message_queue.push_back(std::move(msg));
         }
@@ -232,8 +232,8 @@ void LorangerGateway::process_message(const message_t &msg)
             {"address", msg.from},
             {"rssi", msg.rssi},
             {"battery", data.battery / 255.f},
-            {"eco2 (ppm)", crocore::map_value<float>(data.eco2, 0, 65535, 400, 8192)},
-            {"tvoc (pbb)", crocore::map_value<float>(data.tvoc, 0, 65535, 0, 1187)}
+            {"eco2 (ppm)", data.eco2},
+            {"tvoc (pbb)", data.tvoc}
         };
     }
 

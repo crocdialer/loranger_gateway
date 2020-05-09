@@ -205,6 +205,20 @@ void LorangerGateway::process_message(const message_t &msg)
             {"intensity", data.intensity / 255.f}
         };
     }
+    else if(msg.buf[0] == STRUCT_TYPE_TEMPERATUREMAN && (msg.len >= sizeof(temperature_t)))
+    {
+        temperature_t data = {};
+        memcpy(&data, msg.buf, sizeof(temperature_t));
+
+        j =
+        {
+            {"type", "temperatureman"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"battery", data.battery / 255.f},
+            {"temperature", crocore::map_value<float>(data.temperature, 0, 65535, -50.f, 100.f)}
+        };
+    }
     else if(msg.buf[0] == STRUCT_TYPE_WEATHERMAN && (msg.len >= sizeof(weather_t)))
     {
         weather_t data = {};

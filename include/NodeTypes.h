@@ -5,6 +5,7 @@
 
 #define STRUCT_TYPE_SMART_BULB 0x69
 #define STRUCT_TYPE_ELEVATOR_CONTROL 0x13
+#define STRUCT_TYPE_TEMPERATUREMAN 0x76
 #define STRUCT_TYPE_WEATHERMAN 0x77
 #define STRUCT_TYPE_GASMAN 0xF0
 
@@ -25,6 +26,16 @@ typedef struct elevator_t
     uint8_t velocity = 0;
     uint8_t intensity = 0;
 } elevator_t;
+
+typedef struct temperature_t
+{
+    uint8_t stype = STRUCT_TYPE_TEMPERATUREMAN;
+
+    uint8_t battery = 0;
+
+    //! temperature in range [-100C .. 100C]
+    uint16_t temperature = 0;
+} temperature_t;
 
 typedef struct weather_t
 {

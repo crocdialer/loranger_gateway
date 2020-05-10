@@ -182,7 +182,7 @@ void LorangerGateway::process_message(const message_t &msg)
     auto log_str = format("Packet[%02d] #%d => #%d %ddB: %s", msg.len, msg.from, msg.to, msg.rssi, buffer_to_string(msg.buf, msg.len).c_str());
     LOG_DEBUG << log_str;
 
-    if(!is_checksum_valid())
+    if(!is_checksum_valid(msg))
     {
         LOG_DEBUG << "wrong checksum";
         return;

@@ -38,6 +38,24 @@ std::string buffer_to_string(const uint8_t buff[], int len)
     return buf;
 }
 
+bool is_checksum_valid(const message_t &msg)
+{
+    struct crc_helper_t
+    {
+        uint8_t from, to;
+        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+    };
+    crc_helper_t crc_data = {};
+    crc_data.from = msg.from;
+    crc_data.to = msg.to;
+    memcpy(crc_data.buf, msg.buf, sizeof(msg.buf));
+    uint8_t checksum = crc8(crc_data, 2 + msg.len - 1);
+
+    return checksum != msg.buf[msg.len - 1];
+
+    // return crc8(msg.buf, msg.len - 1) != msg.buf[msg.len - 1];
+}
+
 LorangerGateway::LorangerGateway(int argc, char *argv[]) : crocore::Application(argc, argv)
 {
 
@@ -164,14 +182,14 @@ void LorangerGateway::process_message(const message_t &msg)
     auto log_str = format("Packet[%02d] #%d => #%d %ddB: %s", msg.len, msg.from, msg.to, msg.rssi, buffer_to_string(msg.buf, msg.len).c_str());
     LOG_DEBUG << log_str;
 
-    // output json
-    json j;
-
-    if(crc8(msg.buf, msg.len - 1) != msg.buf[msg.len - 1])
+    if(!is_checksum_valid())
     {
         LOG_DEBUG << "wrong checksum";
         return;
     }
+
+    // output json
+    json j;
 
     if(msg.buf[0] == STRUCT_TYPE_SMART_BULB && (msg.len >= sizeof(smart_bulb_t)))
     {

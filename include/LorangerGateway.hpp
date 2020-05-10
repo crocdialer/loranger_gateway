@@ -14,7 +14,7 @@
 #define RF_IRQ_PIN RPI_V2_GPIO_P1_22 // IRQ on GPIO25 so P1 connector pin #22
 #define RF_RST_PIN RPI_V2_GPIO_P1_15 // IRQ on GPIO22 so P1 connector pin #15
 
-// Our RFM95 Configuration 
+// Our RFM95 Configuration
 #define RF_FREQUENCY  868.00
 #define RF_NODE_ID    1
 
@@ -31,6 +31,8 @@ struct message_t
     int8_t rssi;
 };
 
+bool is_checksum_valid(const message_t &msg);
+
 class LorangerGateway : public crocore::Application
 {
 
@@ -40,23 +42,23 @@ public:
 
 private:
 
-    void setup() override; 
+    void setup() override;
 
     void update(double time_delta) override;
 
     void teardown() override;
 
-    void poll_events() override; 
-    
+    void poll_events() override;
+
     void add_connection(crocore::ConnectionPtr con);
-    
+
     void remove_connection(crocore::ConnectionPtr con);
 
     void process_message(const message_t &msg);
 
     RH_RF95 m_rf95 = RH_RF95(RF_CS_PIN, RF_IRQ_PIN);
 
-    crocore::net::tcp_server m_tcp_server; 
+    crocore::net::tcp_server m_tcp_server;
 
     std::unordered_set<crocore::ConnectionPtr> m_connections;
 

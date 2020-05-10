@@ -49,7 +49,7 @@ bool is_checksum_valid(const message_t &msg)
     crc_data.from = msg.from;
     crc_data.to = msg.to;
     memcpy(crc_data.buf, msg.buf, sizeof(msg.buf));
-    uint8_t checksum = crc8((uint8_t*)crc_data, 2 + msg.len - 1);
+    uint8_t checksum = crc8((uint8_t*)&crc_data, 2 + msg.len - 1);
 
     return checksum != msg.buf[msg.len - 1];
 

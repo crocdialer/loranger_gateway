@@ -51,9 +51,7 @@ bool is_checksum_valid(const message_t &msg)
     memcpy(crc_data.buf, msg.buf, sizeof(msg.buf));
     uint8_t checksum = crc8((uint8_t*)&crc_data, 2 + msg.len - 1);
 
-    return checksum != msg.buf[msg.len - 1];
-
-    // return crc8(msg.buf, msg.len - 1) != msg.buf[msg.len - 1];
+    return checksum == msg.buf[msg.len - 1];
 }
 
 LorangerGateway::LorangerGateway(int argc, char *argv[]) : crocore::Application(argc, argv)

@@ -3,11 +3,18 @@
 
 #include <stdint.h>
 
+#define STRUCT_TYPE_EMPTY_DEVICE 0x00
 #define STRUCT_TYPE_SMART_BULB 0x69
 #define STRUCT_TYPE_ELEVATOR_CONTROL 0x13
 #define STRUCT_TYPE_TEMPERATUREMAN 0x76
 #define STRUCT_TYPE_WEATHERMAN 0x77
 #define STRUCT_TYPE_GASMAN 0xF0
+
+typedef struct empty_device_t
+{
+    uint8_t stype = STRUCT_TYPE_EMPTY_DEVICE;
+    uint8_t battery = 0;
+} empty_device_t;
 
 typedef struct smart_bulb_t
 {

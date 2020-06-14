@@ -189,7 +189,20 @@ void LorangerGateway::process_message(const message_t &msg)
     // output json
     json j;
 
-    if(msg.buf[0] == STRUCT_TYPE_SMART_BULB && (msg.len >= sizeof(smart_bulb_t)))
+    if(msg.buf[0] == STRUCT_TYPE_EMPTY_DEVICE && (msg.len >= sizeof(empty_device_t)))
+    {
+        empty_device_t data = {};
+        memcpy(&data, msg.buf, sizeof(empty_device_t));
+
+        j =
+        {
+            {"type", "empty_device"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"battery", data.battery / 255.f}
+        };
+    }
+    else if(msg.buf[0] == STRUCT_TYPE_SMART_BULB && (msg.len >= sizeof(smart_bulb_t)))
     {
         smart_bulb_t data = {};
         memcpy(&data, msg.buf, sizeof(smart_bulb_t));

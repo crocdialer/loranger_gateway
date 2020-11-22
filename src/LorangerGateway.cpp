@@ -279,7 +279,22 @@ void LorangerGateway::process_message(const message_t &msg)
             {"tvoc (pbb)", data.tvoc}
         };
     }
+    else if(msg.buf[0] == STRUCT_TYPE_TRACKERMAN && (msg.len >= sizeof(trackerman_t)))
+    {
+        trackerman_t data = {};
+        memcpy(&data, msg.buf, sizeof(trackerman_t));
 
+        j =
+        {
+            {"type", "trackerman"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"battery", data.battery / 255.f},
+            {"latitude", data.latitude_fixed / 10000000.0},
+            {"longitude", data.longitude_fixed / 10000000.0},
+            {"num satellites", data.num_satellites}
+        };
+    }
     if(!j.empty())
     {
         std::unique_lock<std::mutex> lock(m_mutex_connection);

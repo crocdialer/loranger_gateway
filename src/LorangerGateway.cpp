@@ -279,6 +279,24 @@ void LorangerGateway::process_message(const message_t &msg)
             {"tvoc (pbb)", data.tvoc}
         };
     }
+    else if(msg.buf[0] == STRUCT_TYPE_GASWEATHERBOY && (msg.len >= sizeof(gasweatherboy_t)))
+    {
+        gasweatherboy_t data = {};
+        memcpy(&data, msg.buf, sizeof(gasweatherboy_t));
+
+        j =
+        {
+            {"type", "gasweatherboy"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"battery", data.battery / 255.f},
+            {"eco2 (ppm)", data.eco2},
+            {"tvoc (pbb)", data.tvoc},
+            {"temperature", crocore::map_value<float>(data.temperature, 0, 65535, -50.f, 100.f)},
+            {"pressure", crocore::map_value<float>(data.pressure, 0, 65535, 500.f, 1500.f)},
+            {"humidity", data.humidity / 255.f}
+        };
+    }
     else if(msg.buf[0] == STRUCT_TYPE_TRACKERMAN && (msg.len >= sizeof(trackerman_t)))
     {
         trackerman_t data = {};

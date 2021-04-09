@@ -9,6 +9,8 @@
 #define STRUCT_TYPE_TEMPERATUREMAN 0x76
 #define STRUCT_TYPE_WEATHERMAN 0x77
 #define STRUCT_TYPE_GASMAN 0xF0
+#define STRUCT_TYPE_GASWEATHERBOY 0xF1
+#define STRUCT_TYPE_TRACKERMAN 0x66
 #define STRUCT_TYPE_RADIOSTROM_3000 0x33
 
 typedef struct empty_device_t
@@ -76,6 +78,48 @@ typedef struct gasman_t
     uint16_t tvoc = 0;
 
 } gasman_t;
+
+typedef struct gasweatherboy_t
+{
+    uint8_t stype = STRUCT_TYPE_GASWEATHERBOY;
+
+    // battery in range [0 .. 1]
+    uint8_t battery = 0;
+
+    //! temperature in range [-50C .. 100C]
+    uint16_t temperature = 0;
+
+    //! pressure in range [0hPa .. 2000hPa]
+    uint16_t pressure = 0;
+
+    // relative humidity in range [0..1]
+    uint8_t humidity = 0;
+
+    // eCO2 (equivalent calculated carbon-dioxide) concentration in range [400 .. 8192] parts per million (ppm)
+    uint16_t eco2 = 0;
+
+    // TVOC (total volatile organic compound) concentration in range [0 .. 1187] parts per billion (ppb)
+    uint16_t tvoc = 0;
+
+} gasweatherboy_t;
+
+typedef struct trackerman_t
+{
+    uint8_t stype = STRUCT_TYPE_TRACKERMAN;
+
+    //! battery [0..1]
+    uint8_t battery = 0;
+
+    //! fixed point latitude in decimal degrees. divide by 10000000.0 to get a double
+    int32_t latitude_fixed = 0;
+
+    //! fixed point longitude in decimal degrees. divide by 10000000.0 to get a double
+    int32_t longitude_fixed = 0;
+
+    //! number of satellites, 0 -> no fix
+    uint8_t num_satellites = 0;
+
+} trackerman_t;
 
 typedef struct radiostrom3000_t
 {

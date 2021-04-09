@@ -279,6 +279,22 @@ void LorangerGateway::process_message(const message_t &msg)
             {"tvoc (pbb)", data.tvoc}
         };
     }
+    else if(msg.buf[0] == STRUCT_TYPE_RADIOSTROM_3000 && (msg.len >= sizeof(radiostrom3000_t)))
+    {
+        radiostrom3000_t data = {};
+        memcpy(&data, msg.buf, sizeof(radiostrom3000_t));
+
+        j =
+        {
+            {"type", "radiostrom3000"},
+            {"address", msg.from},
+            {"rssi", msg.rssi},
+            {"battery", data.battery / 255.f},
+            {"voltage (V)", data.voltage / 1000.f},
+            {"current (A)", data.current / 1000.f},
+            {"power (W)", data.power / 1000.f}
+        };
+    }
 
     if(!j.empty())
     {

@@ -1,4 +1,4 @@
-#include <nlohmann/json.hpp>
+#include <crocore/json.hpp>
 
 #include "LorangerGateway.hpp"
 #include "NodeTypes.h"

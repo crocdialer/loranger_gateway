@@ -54,7 +54,7 @@ bool is_checksum_valid(const message_t &msg)
     return checksum == msg.buf[msg.len - 1];
 }
 
-LorangerGateway::LorangerGateway(int argc, char *argv[]) : crocore::Application(argc, argv)
+LorangerGateway::LorangerGateway(const crocore::Application::create_info_t &create_info) : crocore::Application(create_info)
 {
 
 }

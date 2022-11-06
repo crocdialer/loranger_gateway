@@ -234,20 +234,6 @@ void LorangerGateway::process_message(const message_t &msg)
             {"intensity", data.intensity / 255.f}
         };
     }
-    else if(msg.buf[0] == STRUCT_TYPE_TEMPERATUREMAN && (msg.len >= sizeof(temperature_t)))
-    {
-        temperature_t data = {};
-        memcpy(&data, msg.buf, sizeof(temperature_t));
-
-        j =
-        {
-            {"type", "temperatureman"},
-            {"address", msg.from},
-            {"rssi", msg.rssi},
-            {"battery", data.battery / 255.f},
-            {"temperature", crocore::map_value<float>(data.temperature, 0, 65535, -50.f, 100.f)}
-        };
-    }
     else if(msg.buf[0] == STRUCT_TYPE_WEATHERMAN && (msg.len >= sizeof(weather_t)))
     {
         weather_t data = {};
@@ -261,40 +247,8 @@ void LorangerGateway::process_message(const message_t &msg)
             {"battery", data.battery / 255.f},
             {"temperature", crocore::map_value<float>(data.temperature, 0, 65535, -50.f, 100.f)},
             {"pressure", crocore::map_value<float>(data.pressure, 0, 65535, 500.f, 1500.f)},
-            {"humidity", data.humidity / 255.f}
-        };
-    }
-    else if(msg.buf[0] == STRUCT_TYPE_GASMAN && (msg.len >= sizeof(gasman_t)))
-    {
-        gasman_t data = {};
-        memcpy(&data, msg.buf, sizeof(gasman_t));
-
-        j =
-        {
-            {"type", "gasman"},
-            {"address", msg.from},
-            {"rssi", msg.rssi},
-            {"battery", data.battery / 255.f},
-            {"eco2 (ppm)", data.eco2},
-            {"tvoc (pbb)", data.tvoc}
-        };
-    }
-    else if(msg.buf[0] == STRUCT_TYPE_GASWEATHERBOY && (msg.len >= sizeof(gasweatherboy_t)))
-    {
-        gasweatherboy_t data = {};
-        memcpy(&data, msg.buf, sizeof(gasweatherboy_t));
-
-        j =
-        {
-            {"type", "gasweatherboy"},
-            {"address", msg.from},
-            {"rssi", msg.rssi},
-            {"battery", data.battery / 255.f},
-            {"eco2 (ppm)", data.eco2},
-            {"tvoc (pbb)", data.tvoc},
-            {"temperature", crocore::map_value<float>(data.temperature, 0, 65535, -50.f, 100.f)},
-            {"pressure", crocore::map_value<float>(data.pressure, 0, 65535, 500.f, 1500.f)},
-            {"humidity", data.humidity / 255.f}
+            {"humidity", data.humidity / 255.f},
+            {"air_quality", data.air_quality / 65535.f}
         };
     }
     else if(msg.buf[0] == STRUCT_TYPE_TRACKERMAN && (msg.len >= sizeof(trackerman_t)))

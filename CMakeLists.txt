@@ -16,10 +16,13 @@ set(BUILD_TESTS OFF CACHE BOOL "Build Tests")
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Shared Libraries")
 #set(Boost_USE_STATIC_LIBS ON FORCE)
 
-add_subdirectory("crocore")
+add_subdirectory("submodules/crocore")
 include_directories(${crocore_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${crocore_LIBRARIES})
 
+add_subdirectory("submodules/netzer")
+include_directories(${netzer_INCLUDE_DIRS})
+set(LIBS ${LIBS} ${netzer_LIBRARIES})
 
 add_subdirectory("src")
 

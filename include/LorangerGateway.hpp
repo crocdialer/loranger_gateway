@@ -6,8 +6,10 @@
 #include <bcm2835.h>
 #include <RH_RF95.h>
 
-#include "crocore/Application.hpp"
-#include "crocore/networking.hpp"
+#include <crocore/Application.hpp>
+#include <netzer/networking.hpp>
+#include <boost/asio/executor_work_guard.hpp>
+#include <boost/asio/io_service.hpp>
 
 #define RF_LED_PIN RPI_V2_GPIO_P1_16 // Led on GPIO23 so P1 connector pin #16
 #define RF_CS_PIN  RPI_V2_GPIO_P1_24 // Slave Select on CE0 so P1 connector pin #24
@@ -50,17 +52,21 @@ private:
 
     void poll_events() override;
 
-    void add_connection(crocore::ConnectionPtr con);
+    void add_connection(netzer::ConnectionPtr con);
 
-    void remove_connection(crocore::ConnectionPtr con);
+    void remove_connection(netzer::ConnectionPtr con);
 
     void process_message(const message_t &msg);
 
     RH_RF95 m_rf95 = RH_RF95(RF_CS_PIN, RF_IRQ_PIN);
 
-    crocore::net::tcp_server m_tcp_server;
+    boost::asio::io_service m_io_service;
+    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> m_work_guard = 
+	   boost::asio::make_work_guard(m_io_service); 
+    
+    netzer::tcp_server m_tcp_server;
 
-    std::unordered_set<crocore::ConnectionPtr> m_connections;
+    std::unordered_set<netzer::ConnectionPtr> m_connections;
 
     std::deque<message_t> m_message_queue;
 

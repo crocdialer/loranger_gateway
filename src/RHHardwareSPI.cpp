@@ -329,7 +329,7 @@ void RHHardwareSPI::begin()
      }
 
 #elif (RH_PLATFORM == RH_PLATFORM_RASPI) // Raspberry PI
-  uint8_t dataMode;
+  uint8_t dataMode = 0;
   if (_dataMode == DataMode0)
     dataMode = BCM2835_SPI_MODE0;
   else if (_dataMode == DataMode1)

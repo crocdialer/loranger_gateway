@@ -61,15 +61,15 @@ LorangerGateway::LorangerGateway(const crocore::Application::create_info_t &crea
 
 void LorangerGateway::setup()
 {
-    crocore::g_logger.set_severity(Severity::DEBUG);
+    spdlog::set_level(spdlog::level::debug);
 
-    m_tcp_server = net::tcp_server(background_queue().io_service(), [this](net::tcp_connection_ptr con){ add_connection(con); });
+    m_tcp_server = netzer::tcp_server(m_io_service, [this](netzer::tcp_connection_ptr con){ add_connection(con); });
 
     m_tcp_server.start_listen(TCP_LISTEN_PORT);
 
     if(!bcm2835_init()){ throw std::runtime_error("bcm2835_init() Failed"); }
 
-    LOG_INFO << format("hello loranger_gateway! -- RF95 CS=GPIO%d, RST=GPIO%d", RF_CS_PIN, RF_RST_PIN);
+    spdlog::info("hello loranger_gateway! -- RF95 CS=GPIO{}, RST=GPIO{}", (int)RF_CS_PIN, (int)RF_RST_PIN);
 
     // reset RFM95 module
     pinMode(RF_RST_PIN, OUTPUT);
@@ -78,7 +78,7 @@ void LorangerGateway::setup()
     digitalWrite(RF_RST_PIN, HIGH );
     bcm2835_delay(100);
 
-    if(!m_rf95.init()){ LOG_ERROR << "RF95 module init failed, not good ..."; }
+    if(!m_rf95.init()){ spdlog::error("RF95 module init failed, not good ..."); }
     else
     {
         // Defaults after init are 868.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
@@ -105,7 +105,7 @@ void LorangerGateway::setup()
         // We're ready to listen for incoming message
         m_rf95.setModeRx();
 
-        LOG_INFO << format("init success: NodeID=%d @ %3.2fMHz -- listening ...", RF_NODE_ID, RF_FREQUENCY);
+	spdlog::info("init success: NodeID={} @ {}MHz -- listening ...", RF_NODE_ID, RF_FREQUENCY);
     }
 }
 
@@ -126,9 +126,9 @@ void LorangerGateway::update(double time_delta)
 
 void LorangerGateway::teardown()
 {
-
-    LOG_PRINT << "\nciao " << name();
+    m_work_guard.reset();
     bcm2835_close();
+    spdlog::info("ciao {}", name());
 }
 
 void LorangerGateway::poll_events()
@@ -150,24 +150,24 @@ void LorangerGateway::poll_events()
             std::unique_lock<std::mutex> lock(m_mutex_queue);
             m_message_queue.push_back(std::move(msg));
         }
-        else{ LOG_WARNING << "receive failed"; }
+        else{ spdlog::warn("receive failed"); }
     }
 }
 
-void LorangerGateway::add_connection(crocore::ConnectionPtr con)
+void LorangerGateway::add_connection(netzer::ConnectionPtr con)
 {
-    LOG_DEBUG << "hello " << con->description();
+	spdlog::debug("hello {}", con->description());
 
-    con->set_disconnect_cb([this](crocore::ConnectionPtr c){ remove_connection(c); });
+    con->set_disconnect_cb([this](netzer::ConnectionPtr c){ remove_connection(c); });
 
     // mutex
     std::unique_lock<std::mutex> lock(m_mutex_connection);
     m_connections.insert(con);
 }
 
-void LorangerGateway::remove_connection(crocore::ConnectionPtr con)
+void LorangerGateway::remove_connection(netzer::ConnectionPtr con)
 {
-    LOG_DEBUG << "bye " << con->description();
+	spdlog::debug("bye {}", con->description());
 
     // mutex
     std::unique_lock<std::mutex> lock(m_mutex_connection);
@@ -178,11 +178,11 @@ void LorangerGateway::remove_connection(crocore::ConnectionPtr con)
 void LorangerGateway::process_message(const message_t &msg)
 {
     auto log_str = format("Packet[%02d] #%d => #%d %ddB: %s", msg.len, msg.from, msg.to, msg.rssi, buffer_to_string(msg.buf, msg.len).c_str());
-    LOG_DEBUG << log_str;
+    spdlog::debug(log_str);
 
     if(!is_checksum_valid(msg))
     {
-        LOG_DEBUG << "wrong checksum";
+	    spdlog::debug("wrong checksum");
         return;
     }
 

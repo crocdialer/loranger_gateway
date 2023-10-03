@@ -976,6 +976,7 @@
 #undef round
 #undef double
 
+/*
 // Sigh: there is no widespread adoption of htons and friends in the base code, only in some WiFi headers etc
 // that have a lot of excess baggage
 #if RH_PLATFORM != RH_PLATFORM_UNIX && !defined(htons)
@@ -1002,6 +1003,7 @@
   #error "Dont know how to define htons and friends for this processor" 
  #endif
 #endif
+*/
 
 // This is the address that indicates a broadcast
 #define RH_BROADCAST_ADDRESS 0xff

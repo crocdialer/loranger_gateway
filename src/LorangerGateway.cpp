@@ -56,7 +56,7 @@ bool is_checksum_valid(const message_t &msg)
 
 LorangerGateway::LorangerGateway(const crocore::Application::create_info_t &create_info) : crocore::Application(create_info)
 {
-
+    background_queue().post([this](){ m_io_service.run(); });
 }
 
 void LorangerGateway::setup()
